@@ -3,806 +3,737 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Projeto Mudança — Iury & Amanda</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<title>Painel Financeiro — Iury & Amanda</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:#09090f;--s1:#111118;--s2:#1a1a24;--s3:#22222f;
-  --border:#2a2a3a;--border2:#333345;
-  --ink:#f0f0fa;--ink2:#9090b0;--ink3:#55556a;
-  --cyan:#00e5ff;--cyan-d:#00b8cc;--cyan-glow:rgba(0,229,255,.15);
-  --green:#00ff9d;--green-d:#00cc7a;--green-glow:rgba(0,255,157,.12);
-  --red:#ff4466;--red-glow:rgba(255,68,102,.12);
-  --amber:#ffb347;--amber-glow:rgba(255,179,71,.12);
-  --purple:#b47fff;--purple-glow:rgba(180,127,255,.12);
-  --pink:#ff6eb4;
-  --r:20px;
+  --bg: #f8f7f5;
+  --bg2: #f0ede8;
+  --surface: #ffffff;
+  --surface2: #f5f3f0;
+  --border: #e8e4de;
+  --border2: #d8d4ce;
+  --ink: #1a1814;
+  --ink2: #5a5650;
+  --ink3: #9a9690;
+  --ink4: #c8c4be;
+  --green: #1a7a4a;
+  --green-l: #e8f5ee;
+  --green-m: #2d9e63;
+  --red: #c0392b;
+  --red-l: #fdf0ee;
+  --amber: #d4820a;
+  --amber-l: #fef8ee;
+  --blue: #1a3a6b;
+  --blue-l: #eef3fc;
+  --purple: #5a2d8a;
+  --purple-l: #f5f0fc;
+  --r: 20px;
+  --sh: 0 1px 3px rgba(26,24,20,.06), 0 4px 16px rgba(26,24,20,.08);
+  --sh2: 0 2px 8px rgba(26,24,20,.04), 0 8px 32px rgba(26,24,20,.10);
 }
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--ink);font-family:'Plus Jakarta Sans',sans-serif;min-height:100vh;padding-bottom:100px;overflow-x:hidden;}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+body { background:var(--bg); color:var(--ink); font-family:'Inter',sans-serif; min-height:100vh; padding-bottom:96px; font-size:14px; line-height:1.5; }
 
-/* NOISE OVERLAY */
-body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.4;}
+/* ── TABS ── */
+.tab { display:none; }
+.tab.active { display:block; }
 
-/* TABS */
-.tab{display:none;position:relative;z-index:1;}
-.tab.active{display:block;}
+/* ── NAV ── */
+.nav { position:fixed; bottom:0; left:0; right:0; z-index:200; padding:0 16px 20px; background:linear-gradient(to top, var(--bg) 70%, transparent); }
+.nav-inner { background:var(--ink); border-radius:22px; display:flex; padding:6px; gap:4px; box-shadow:var(--sh2); }
+.ni { flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; border:none; background:none; padding:8px 4px; border-radius:16px; transition:all .2s; }
+.ni.active { background:rgba(255,255,255,.12); }
+.ni-icon { font-size:18px; }
+.ni-label { font-size:8px; letter-spacing:.5px; text-transform:uppercase; color:rgba(255,255,255,.4); font-weight:600; transition:color .2s; }
+.ni.active .ni-label { color:#fff; }
 
-/* NAV */
-.nav{position:fixed;bottom:0;left:0;right:0;z-index:200;padding:0 12px 20px;padding-bottom:max(20px,env(safe-area-inset-bottom));}
-.nav-inner{background:rgba(17,17,24,.92);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:22px;display:flex;padding:8px;}
-.ni{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;border:none;background:none;padding:8px 4px;border-radius:14px;transition:all .2s;}
-.ni.active{background:rgba(0,229,255,.1);}
-.ni-icon{font-size:20px;transition:transform .2s;}
-.ni.active .ni-icon{transform:translateY(-2px);}
-.ni-label{font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--ink3);font-weight:700;transition:color .2s;}
-.ni.active .ni-label{color:var(--cyan);}
+/* ── HEADER ── */
+.hdr { padding:52px 20px 24px; border-bottom:1px solid var(--border); background:var(--surface); }
+.hdr-eyebrow { font-size:10px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--ink3); margin-bottom:6px; }
+.hdr-title { font-family:'Playfair Display', serif; font-size:30px; font-weight:900; line-height:1.1; }
+.hdr-title span { color:var(--green); }
+.hdr-sub { font-size:12px; color:var(--ink3); margin-top:8px; }
 
-/* HEADER */
-.hdr{padding:56px 20px 28px;position:relative;overflow:hidden;}
-.hdr-glow{position:absolute;top:-60px;right:-60px;width:250px;height:250px;border-radius:50%;background:radial-gradient(circle,var(--cyan-glow),transparent 70%);pointer-events:none;}
-.hdr-glow2{position:absolute;bottom:-80px;left:-80px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,var(--purple-glow),transparent 70%);pointer-events:none;}
-.hdr-tag{font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--cyan);margin-bottom:8px;display:flex;align-items:center;gap:6px;}
-.hdr-tag::before{content:'';width:20px;height:1px;background:var(--cyan);}
-.hdr-title{font-family:'Syne',sans-serif;font-size:36px;font-weight:800;line-height:1;margin-bottom:6px;}
-.hdr-title span{color:var(--cyan);}
-.hdr-sub{font-size:12px;color:var(--ink3);letter-spacing:.5px;}
+/* ── SECTION ── */
+.sec { padding:0 16px; margin-top:24px; }
+.sec-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--ink3); margin-bottom:4px; display:flex; align-items:center; gap:8px; }
+.sec-label::after { content:''; flex:1; height:1px; background:var(--border); }
+.sec-title { font-family:'Playfair Display',serif; font-size:22px; font-weight:800; line-height:1.15; margin-bottom:16px; }
 
-/* CARDS */
-.card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:14px;position:relative;overflow:hidden;}
-.card-glow{position:absolute;top:-40px;right:-40px;width:120px;height:120px;border-radius:50%;pointer-events:none;}
-.sec{padding:0 16px;margin-top:28px;}
-.sec-tag{font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--ink3);margin-bottom:5px;display:flex;align-items:center;gap:8px;}
-.sec-tag::after{content:'';flex:1;height:1px;background:var(--border);}
-.sec-title{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;line-height:1.1;margin-bottom:16px;}
+/* ── CARD ── */
+.card { background:var(--surface); border-radius:var(--r); padding:20px; margin-bottom:12px; box-shadow:var(--sh); border:1px solid var(--border); }
+.card-accent { border-left:3px solid; }
+.card-accent.green { border-left-color:var(--green); }
+.card-accent.red { border-left-color:var(--red); }
+.card-accent.amber { border-left-color:var(--amber); }
+.card-accent.blue { border-left-color:var(--blue); }
 
-/* STAT GRID */
-.sg{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px;}
-.sc{background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:16px;position:relative;overflow:hidden;}
-.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:2px 2px 0 0;}
-.sc.cyan::before{background:linear-gradient(90deg,var(--cyan),transparent);}
-.sc.green::before{background:linear-gradient(90deg,var(--green),transparent);}
-.sc.red::before{background:linear-gradient(90deg,var(--red),transparent);}
-.sc.amber::before{background:linear-gradient(90deg,var(--amber),transparent);}
-.sc-lbl{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink3);margin-bottom:6px;}
-.sc-val{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;line-height:1;}
-.sc-sub{font-size:10px;color:var(--ink3);margin-top:4px;}
-.c-cyan{color:var(--cyan);}
-.c-green{color:var(--green);}
-.c-red{color:var(--red);}
-.c-amber{color:var(--amber);}
-.c-purple{color:var(--purple);}
-.c-pink{color:var(--pink);}
+/* ── STAT ROW ── */
+.stat-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border); }
+.stat-row:last-child { border-bottom:none; }
+.stat-row-label { font-size:13px; color:var(--ink2); }
+.stat-row-val { font-size:14px; font-weight:700; }
+.stat-row.total .stat-row-label { font-weight:800; font-size:14px; color:var(--ink); }
+.stat-row.total .stat-row-val { font-size:17px; }
 
-/* PROGRESS BAR */
-.prog{margin:10px 0;}
-.prog-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--ink3);margin-bottom:5px;}
-.prog-track{height:6px;background:var(--s3);border-radius:3px;overflow:hidden;}
-.prog-fill{height:100%;border-radius:3px;transition:width .8s cubic-bezier(.4,0,.2,1);}
+/* ── SCORE CARD ── */
+.score-wrap { display:flex; align-items:center; gap:20px; }
+.score-ring { position:relative; width:90px; height:90px; flex-shrink:0; }
+.score-ring svg { transform:rotate(-90deg); }
+.score-center { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.score-num { font-family:'Playfair Display',serif; font-size:24px; font-weight:900; line-height:1; }
+.score-lbl { font-size:9px; font-weight:600; letter-spacing:1px; text-transform:uppercase; color:var(--ink3); margin-top:2px; }
+.score-info { flex:1; }
+.score-status { font-family:'Playfair Display',serif; font-size:18px; font-weight:800; margin-bottom:6px; }
+.score-desc { font-size:12px; color:var(--ink2); line-height:1.5; }
 
-/* DONUT CHART */
-.donut-wrap{display:flex;align-items:center;gap:20px;padding:4px 0;}
-.donut{position:relative;width:110px;height:110px;flex-shrink:0;}
-.donut svg{transform:rotate(-90deg);}
-.donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
-.donut-center-val{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;line-height:1;}
-.donut-center-lbl{font-size:8px;color:var(--ink3);letter-spacing:1px;text-transform:uppercase;margin-top:2px;}
-.donut-legend{flex:1;display:flex;flex-direction:column;gap:8px;}
-.dl-item{display:flex;align-items:center;gap:8px;}
-.dl-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
-.dl-label{font-size:11px;color:var(--ink2);flex:1;}
-.dl-val{font-size:11px;font-weight:700;}
+/* ── ALERT ── */
+.alert { border-radius:14px; padding:14px 16px; margin-bottom:10px; display:flex; gap:12px; align-items:flex-start; }
+.alert-icon { font-size:20px; flex-shrink:0; margin-top:1px; }
+.alert-title { font-size:13px; font-weight:700; margin-bottom:2px; }
+.alert-desc { font-size:11px; line-height:1.5; }
+.alert.red { background:var(--red-l); border:1px solid rgba(192,57,43,.15); }
+.alert.amber { background:var(--amber-l); border:1px solid rgba(212,130,10,.15); }
+.alert.green { background:var(--green-l); border:1px solid rgba(26,122,74,.15); }
+.alert.blue { background:var(--blue-l); border:1px solid rgba(26,58,107,.15); }
+.alert .alert-title.red { color:var(--red); }
+.alert .alert-title.amber { color:var(--amber); }
+.alert .alert-title.green { color:var(--green); }
+.alert .alert-title.blue { color:var(--blue); }
 
-/* LIFE CARDS */
-.life-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.life-card{background:var(--s1);border:1px solid var(--border);border-radius:18px;padding:16px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;position:relative;overflow:hidden;cursor:pointer;transition:all .2s;}
-.life-card:active{transform:scale(.97);}
-.life-card.wide{grid-column:span 2;}
-.life-card-glow{position:absolute;top:-20px;left:50%;transform:translateX(-50%);width:80px;height:80px;border-radius:50%;pointer-events:none;}
-.life-illustration{position:relative;z-index:1;}
-.life-name{font-size:11px;font-weight:700;color:var(--ink2);letter-spacing:.5px;position:relative;z-index:1;}
-.life-val{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;position:relative;z-index:1;}
-.life-sub{font-size:9px;color:var(--ink3);position:relative;z-index:1;}
+/* ── VIDA ITEM ── */
+.vida-item { background:var(--surface); border-radius:16px; border:1px solid var(--border); box-shadow:var(--sh); margin-bottom:10px; overflow:hidden; }
+.vida-header { display:flex; align-items:center; gap:14px; padding:16px; cursor:pointer; }
+.vida-icon { width:48px; height:48px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+.vida-info { flex:1; min-width:0; }
+.vida-name { font-size:14px; font-weight:700; }
+.vida-sub { font-size:11px; color:var(--ink3); margin-top:1px; }
+.vida-right { text-align:right; }
+.vida-val { font-family:'Playfair Display',serif; font-size:18px; font-weight:800; }
+.vida-freq { font-size:10px; color:var(--ink3); }
+.vida-expand { display:none; border-top:1px solid var(--border); padding:16px; background:var(--surface2); }
+.vida-expand.open { display:block; }
+.vida-expand-row { display:flex; justify-content:space-between; padding:7px 0; border-bottom:1px solid var(--border); font-size:12px; }
+.vida-expand-row:last-child { border-bottom:none; }
+.vida-expand-label { color:var(--ink2); }
+.vida-expand-val { font-weight:600; }
+.vida-tag { display:inline-flex; align-items:center; gap:4px; font-size:10px; font-weight:600; padding:3px 8px; border-radius:20px; margin-top:6px; }
 
-/* SVG ILLUSTRATIONS */
-.illus{width:64px;height:64px;}
+/* ── PROJEÇÃO BAR ── */
+.proj-bar { margin:8px 0; }
+.proj-bar-header { display:flex; justify-content:space-between; font-size:11px; color:var(--ink3); margin-bottom:4px; }
+.proj-track { height:6px; background:var(--border); border-radius:3px; overflow:hidden; position:relative; }
+.proj-fill { height:100%; border-radius:3px; }
+.proj-today { position:absolute; top:-3px; bottom:-3px; width:2px; background:var(--ink); border-radius:1px; }
+.proj-today-label { position:absolute; top:-16px; font-size:8px; font-weight:700; color:var(--ink); transform:translateX(-50%); white-space:nowrap; }
 
-/* DEBT CARD */
-.dc{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:12px;position:relative;overflow:hidden;}
-.dc::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;}
-.dc.ativa::before{background:linear-gradient(180deg,var(--amber),transparent);}
-.dc.quitada::before{background:linear-gradient(180deg,var(--green),transparent);}
-.dc.reduzida::before{background:linear-gradient(180deg,var(--cyan),transparent);}
-.dc.quitada{opacity:.6;}
-.dc-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:8px;}
-.dc-name{font-weight:800;font-size:15px;line-height:1.2;flex:1;}
-.badge{font-size:9px;font-weight:700;padding:4px 10px;border-radius:20px;letter-spacing:.5px;flex-shrink:0;}
-.badge-green{background:rgba(0,255,157,.12);color:var(--green);border:1px solid rgba(0,255,157,.2);}
-.badge-amber{background:rgba(255,179,71,.12);color:var(--amber);border:1px solid rgba(255,179,71,.2);}
-.badge-cyan{background:rgba(0,229,255,.12);color:var(--cyan);border:1px solid rgba(0,229,255,.2);}
-.dc-cartao{font-size:10px;color:var(--ink3);margin-bottom:10px;}
-.dc-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px;}
-.dc-stat-lbl{font-size:8px;color:var(--ink3);letter-spacing:1px;text-transform:uppercase;margin-bottom:2px;}
-.dc-stat-val{font-size:13px;font-weight:700;}
+/* ── DÍVIDA CARD ── */
+.dc { background:var(--surface); border-radius:var(--r); border:1px solid var(--border); box-shadow:var(--sh); margin-bottom:12px; overflow:hidden; }
+.dc-header { padding:18px; border-bottom:1px solid var(--border); }
+.dc-top { display:flex; justify-content:space-between; align-items:flex-start; gap:8px; margin-bottom:8px; }
+.dc-name { font-size:15px; font-weight:800; flex:1; line-height:1.2; }
+.badge { font-size:9px; font-weight:700; padding:3px 10px; border-radius:20px; flex-shrink:0; }
+.badge-green { background:var(--green-l); color:var(--green); border:1px solid rgba(26,122,74,.2); }
+.badge-amber { background:var(--amber-l); color:var(--amber); border:1px solid rgba(212,130,10,.2); }
+.badge-blue { background:var(--blue-l); color:var(--blue); border:1px solid rgba(26,58,107,.2); }
+.dc-meta { font-size:11px; color:var(--ink3); margin-bottom:12px; }
+.dc-stats { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:12px; }
+.dc-stat { background:var(--surface2); border-radius:10px; padding:10px; }
+.dc-stat-lbl { font-size:8px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--ink3); margin-bottom:3px; }
+.dc-stat-val { font-size:14px; font-weight:800; }
+.dc-progress { margin-bottom:12px; }
+.dc-progress-labels { display:flex; justify-content:space-between; font-size:10px; color:var(--ink3); margin-bottom:4px; }
+.dc-track { height:5px; background:var(--border); border-radius:3px; overflow:hidden; }
+.dc-fill { height:100%; border-radius:3px; transition:width .6s; }
 
-/* CHIPS */
-.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
-.chip{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;cursor:pointer;transition:all .15s;border:1px solid var(--border);background:var(--s2);color:var(--ink3);user-select:none;}
-.chip:active{transform:scale(.85);}
-.chip.paga{background:rgba(0,255,157,.12);border-color:rgba(0,255,157,.3);color:var(--green);}
-.chip.antecip{background:rgba(0,229,255,.12);border-color:rgba(0,229,255,.3);color:var(--cyan);}
+/* ── IMPACTO BOX ── */
+.impacto-box { background:var(--green-l); border:1px solid rgba(26,122,74,.2); border-radius:12px; padding:12px; margin-bottom:12px; }
+.impacto-title { font-size:10px; font-weight:700; color:var(--green); letter-spacing:1px; text-transform:uppercase; margin-bottom:6px; }
+.impacto-row { display:flex; justify-content:space-between; font-size:12px; padding:3px 0; }
+.impacto-lbl { color:var(--ink2); }
+.impacto-val { font-weight:700; color:var(--green); }
 
-/* ASSINATURAS */
-.assin-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:12px;}
-.assin-row{display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid var(--border);}
-.assin-row:last-child{border-bottom:none;}
-.assin-icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
-.assin-info{flex:1;}
-.assin-name{font-weight:700;font-size:13px;}
-.assin-type{font-size:10px;color:var(--ink3);margin-top:1px;}
-.assin-val{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;}
+/* ── PARCELAS ── */
+.parcelas-wrap { padding:16px; background:var(--bg2); }
+.parcelas-title { font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--ink3); margin-bottom:10px; }
+.parcelas-grid { display:flex; flex-wrap:wrap; gap:6px; }
+.chip { min-width:56px; padding:6px 4px; border-radius:10px; display:flex; flex-direction:column; align-items:center; gap:2px; cursor:pointer; transition:all .15s; border:1.5px solid var(--border); background:var(--surface); user-select:none; }
+.chip:active { transform:scale(.92); }
+.chip-num { font-size:10px; font-weight:800; }
+.chip-date { font-size:8px; color:var(--ink3); }
+.chip-val { font-size:9px; font-weight:600; }
+.chip.paga { background:var(--green-l); border-color:rgba(26,122,74,.3); }
+.chip.paga .chip-num { color:var(--green); }
+.chip.antecip { background:var(--blue-l); border-color:rgba(26,58,107,.3); }
+.chip.antecip .chip-num { color:var(--blue); }
+.chip.antecip .chip-date { color:var(--blue); }
+.chip-legend { display:flex; gap:14px; margin-top:10px; flex-wrap:wrap; }
+.cl { display:flex; align-items:center; gap:5px; font-size:9px; color:var(--ink3); }
+.cl-dot { width:10px; height:10px; border-radius:3px; }
+.dc-actions { padding:14px 16px; background:var(--surface); border-top:1px solid var(--border); display:flex; gap:8px; }
+.btn { padding:10px 14px; border-radius:12px; border:none; font-family:'Inter',sans-serif; font-size:12px; font-weight:700; cursor:pointer; transition:all .2s; flex:1; text-align:center; }
+.btn-primary { background:var(--ink); color:#fff; }
+.btn-secondary { background:var(--surface2); color:var(--ink); border:1px solid var(--border); }
+.btn-green { background:var(--green); color:#fff; }
 
-/* SUGESTÃO */
-.sug{border-radius:16px;padding:18px;margin-bottom:12px;border:1px solid;}
-.sug-head{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px;}
-.sug-emoji{font-size:28px;flex-shrink:0;}
-.sug-title{font-weight:800;font-size:14px;margin-bottom:3px;}
-.sug-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;display:inline-block;}
-.sug-text{font-size:12px;line-height:1.7;color:var(--ink2);}
-.sug-save{font-size:12px;font-weight:700;margin-top:10px;padding:8px 12px;border-radius:10px;display:inline-block;}
+/* ── MODAL ── */
+.modal-ov { position:fixed; inset:0; background:rgba(0,0,0,.5); backdrop-filter:blur(8px); z-index:500; display:none; align-items:flex-end; }
+.modal-ov.open { display:flex; }
+.modal { background:var(--surface); border-radius:28px 28px 0 0; padding:20px 20px 40px; width:100%; max-height:85vh; overflow-y:auto; }
+.modal-handle { width:40px; height:4px; background:var(--border); border-radius:2px; margin:0 auto 18px; }
+.modal-title { font-family:'Playfair Display',serif; font-size:22px; font-weight:800; margin-bottom:4px; }
+.modal-sub { font-size:12px; color:var(--ink3); margin-bottom:20px; }
+.mbtn { width:100%; padding:14px; border-radius:14px; border:none; font-family:'Inter',sans-serif; font-size:13px; font-weight:700; cursor:pointer; margin-bottom:10px; transition:all .2s; }
+.mbtn-p { background:var(--ink); color:#fff; }
+.mbtn-green { background:var(--green); color:#fff; }
+.mbtn-s { background:var(--surface2); color:var(--ink); border:1px solid var(--border); }
+.mbtn-d { background:var(--red-l); color:var(--red); border:1px solid rgba(192,57,43,.2); }
 
-/* ORÇAMENTO TIMELINE */
-.timeline{position:relative;padding-left:28px;}
-.timeline::before{content:'';position:absolute;left:10px;top:8px;bottom:8px;width:2px;background:linear-gradient(180deg,var(--cyan),var(--green));border-radius:1px;}
-.tl-item{position:relative;margin-bottom:20px;}
-.tl-dot{position:absolute;left:-22px;top:14px;width:12px;height:12px;border-radius:50%;border:2px solid;background:var(--bg);}
-.tl-card{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:16px;}
-.tl-mes{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;margin-bottom:4px;}
-.tl-sobra{font-size:12px;font-weight:700;margin-bottom:10px;}
-.tl-note{font-size:11px;color:var(--ink2);margin-bottom:10px;line-height:1.5;}
+/* ── TOAST ── */
+.toast { position:fixed; bottom:110px; left:50%; transform:translateX(-50%) translateY(10px); background:var(--ink); color:#fff; font-size:12px; font-weight:600; padding:10px 22px; border-radius:30px; opacity:0; transition:all .3s; pointer-events:none; z-index:600; white-space:nowrap; }
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 
-/* PLANO CARD */
-.plano-step{display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);}
-.plano-step:last-child{border-bottom:none;}
-.ps-num{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--purple));color:#000;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.ps-body{flex:1;}
-.ps-title{font-weight:800;font-size:14px;}
-.ps-desc{font-size:11px;color:var(--ink3);margin-top:2px;}
-.ps-val{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:var(--green);white-space:nowrap;}
+/* ── PLANO ── */
+.plano-step { display:flex; gap:14px; padding:16px 0; border-bottom:1px solid var(--border); }
+.plano-step:last-child { border-bottom:none; }
+.ps-num { width:32px; height:32px; border-radius:50%; background:var(--ink); color:#fff; font-size:12px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.ps-num.done { background:var(--green); }
+.ps-num.warn { background:var(--amber); }
+.ps-body { flex:1; }
+.ps-title { font-weight:800; font-size:14px; margin-bottom:3px; }
+.ps-desc { font-size:11px; color:var(--ink2); line-height:1.5; }
+.ps-impact { font-size:11px; font-weight:700; margin-top:6px; padding:6px 10px; border-radius:8px; display:inline-block; }
 
-/* MODAL */
-.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(10px);z-index:500;display:none;align-items:flex-end;}
-.modal-ov.open{display:flex;}
-.modal{background:var(--s1);border:1px solid var(--border2);border-radius:28px 28px 0 0;padding:20px 20px 40px;width:100%;max-height:85vh;overflow-y:auto;}
-.modal-handle{width:40px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 20px;}
-.modal-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px;}
-.modal-sub{font-size:12px;color:var(--ink3);margin-bottom:20px;}
-.mbtn{width:100%;padding:14px;border-radius:14px;border:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:10px;transition:all .2s;}
-.mbtn-p{background:linear-gradient(135deg,var(--cyan),var(--purple));color:#000;}
-.mbtn-s{background:var(--s2);color:var(--ink);border:1px solid var(--border);}
-.mbtn-d{background:rgba(255,68,102,.1);color:var(--red);border:1px solid rgba(255,68,102,.2);}
+/* ── TIMELINE ── */
+.timeline { position:relative; padding-left:24px; }
+.timeline::before { content:''; position:absolute; left:7px; top:10px; bottom:10px; width:2px; background:var(--border); border-radius:1px; }
+.tl-item { position:relative; margin-bottom:16px; }
+.tl-dot { position:absolute; left:-20px; top:14px; width:14px; height:14px; border-radius:50%; border:2px solid; background:var(--surface); }
+.tl-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:14px; box-shadow:var(--sh); }
+.tl-mes { font-family:'Playfair Display',serif; font-size:16px; font-weight:800; }
+.tl-sobra { font-size:12px; font-weight:700; margin:3px 0 8px; }
+.tl-note { font-size:11px; color:var(--ink2); line-height:1.6; }
+.tl-bar { margin-top:10px; }
+.tl-bar-row { display:flex; align-items:center; gap:8px; margin-bottom:5px; }
+.tl-bar-lbl { font-size:9px; color:var(--ink3); width:80px; flex-shrink:0; }
+.tl-bar-track { flex:1; height:5px; background:var(--border); border-radius:3px; overflow:hidden; }
+.tl-bar-fill { height:100%; border-radius:3px; }
+.tl-bar-val { font-size:9px; font-weight:700; width:55px; text-align:right; }
 
-/* TOAST */
-.toast{position:fixed;bottom:110px;left:50%;transform:translateX(-50%) translateY(10px);background:linear-gradient(135deg,var(--cyan),var(--purple));color:#000;font-size:12px;font-weight:700;padding:10px 22px;border-radius:30px;opacity:0;transition:all .3s;pointer-events:none;z-index:400;white-space:nowrap;}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+/* ── ANIMATE ── */
+@keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+.tab.active .card, .tab.active .dc, .tab.active .alert, .tab.active .vida-item, .tab.active .tl-item { animation:fadeUp .3s ease both; }
+.tab.active .alert:nth-child(2) { animation-delay:.05s; }
+.tab.active .alert:nth-child(3) { animation-delay:.1s; }
+.tab.active .alert:nth-child(4) { animation-delay:.15s; }
 
-/* RECEITA BARS */
-.receita-bar{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);}
-.receita-bar:last-child{border-bottom:none;}
-.rb-label{font-size:12px;color:var(--ink2);width:130px;flex-shrink:0;}
-.rb-track{flex:1;height:6px;background:var(--s3);border-radius:3px;overflow:hidden;}
-.rb-fill{height:100%;border-radius:3px;}
-.rb-val{font-size:12px;font-weight:700;width:75px;text-align:right;}
-
-/* CHIP LEGEND */
-.chip-leg{display:flex;gap:14px;margin-top:10px;flex-wrap:wrap;}
-.cl-i{display:flex;align-items:center;gap:5px;font-size:9px;color:var(--ink3);}
-.cl-d{width:10px;height:10px;border-radius:3px;}
-
-/* ANIMATE */
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.5;}}
-@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
-@keyframes glow{0%,100%{box-shadow:0 0 10px var(--cyan-glow);}50%{box-shadow:0 0 25px var(--cyan-glow),0 0 50px var(--cyan-glow);}}
-.tab.active>*{animation:fadeUp .35s ease both;}
-.tab.active>*:nth-child(2){animation-delay:.05s;}
-.tab.active>*:nth-child(3){animation-delay:.1s;}
-.tab.active>*:nth-child(4){animation-delay:.15s;}
-.tab.active>*:nth-child(5){animation-delay:.2s;}
-.pulse{animation:pulse 2s ease-in-out infinite;}
+/* ── CHIPS SUMMARY ── */
+.chips-summary { background:var(--surface2); border-radius:12px; padding:12px; margin-top:10px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; }
+.cs-item { text-align:center; }
+.cs-val { font-family:'Playfair Display',serif; font-size:16px; font-weight:800; }
+.cs-lbl { font-size:9px; color:var(--ink3); letter-spacing:.5px; text-transform:uppercase; margin-top:1px; }
 </style>
 </head>
 <body>
 
 <div id="toast" class="toast"></div>
 <div id="modal-ov" class="modal-ov">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div id="modal-body"></div>
-  </div>
+  <div class="modal"><div class="modal-handle"></div><div id="modal-body"></div></div>
 </div>
 
-<!-- ══════════════════════════════════════
-     TAB 1 — VISÃO GERAL
-══════════════════════════════════════ -->
+<!-- ════════════════════════════════════
+     TAB 1 — VISÃO DO CFO
+════════════════════════════════════ -->
 <div id="tab-visao" class="tab active">
   <div class="hdr">
-    <div class="hdr-glow"></div>
-    <div class="hdr-glow2"></div>
-    <div class="hdr-tag">Projeto Mudança</div>
-    <div class="hdr-title">Olá, <span>Iury</span> 👋</div>
-    <div style="font-size:13px;color:var(--ink2);margin-top:4px;">e Amanda! Este é o plano da família.</div>
-    <div class="hdr-sub" style="margin-top:8px;">Atualizado · Abril 2026</div>
+    <div class="hdr-eyebrow">Painel Financeiro · Abril 2026</div>
+    <div class="hdr-title">Visão <span>Estratégica</span></div>
+    <div class="hdr-sub">Iury & Amanda · Análise dia 13/04/2026</div>
   </div>
 
-  <!-- STATS -->
-  <div class="sg">
-    <div class="sc cyan">
-      <div class="sc-lbl">Receita Total</div>
-      <div class="sc-val c-cyan">R$7.196</div>
-      <div class="sc-sub">família + streaming</div>
-    </div>
-    <div class="sc green">
-      <div class="sc-lbl">Sobra em Maio</div>
-      <div class="sc-val c-green" id="ov-sobra">R$1.378</div>
-      <div class="sc-sub">margem disponível</div>
-    </div>
-    <div class="sc red">
-      <div class="sc-lbl">Dívidas Ativas</div>
-      <div class="sc-val c-red" id="ov-dividas">7</div>
-      <div class="sc-sub" id="ov-saldo">R$13.2k em aberto</div>
-    </div>
-    <div class="sc amber">
-      <div class="sc-lbl">Comprometido</div>
-      <div class="sc-val c-amber" id="ov-pct">81%</div>
-      <div class="sc-sub">da receita mensal</div>
-    </div>
-  </div>
-
-  <!-- DONUT -->
+  <!-- SCORE -->
   <div class="sec">
-    <div class="sec-tag">Composição</div>
-    <div class="sec-title">Para onde vai o dinheiro?</div>
+    <div class="sec-label">Saúde Financeira</div>
     <div class="card">
-      <div class="donut-wrap">
-        <div class="donut">
-          <svg width="110" height="110" viewBox="0 0 110 110">
-            <circle cx="55" cy="55" r="42" fill="none" stroke="#1a1a24" stroke-width="14"/>
-            <!-- Parcelas 52% -->
-            <circle cx="55" cy="55" r="42" fill="none" stroke="#ff4466" stroke-width="14" stroke-dasharray="136.9 126.7" stroke-dashoffset="0"/>
-            <!-- Vida 16% -->
-            <circle cx="55" cy="55" r="42" fill="none" stroke="#ffb347" stroke-width="14" stroke-dasharray="42.1 221.5" stroke-dashoffset="-136.9"/>
-            <!-- Assinat 6% -->
-            <circle cx="55" cy="55" r="42" fill="none" stroke="#b47fff" stroke-width="14" stroke-dasharray="15.8 247.8" stroke-dashoffset="-179"/>
-            <!-- Sobra 19% -->
-            <circle cx="55" cy="55" r="42" fill="none" stroke="#00ff9d" stroke-width="14" stroke-dasharray="50 213.6" stroke-dashoffset="-194.8"/>
+      <div class="score-wrap">
+        <div class="score-ring">
+          <svg width="90" height="90" viewBox="0 0 90 90">
+            <circle cx="45" cy="45" r="36" fill="none" stroke="#e8e4de" stroke-width="10"/>
+            <circle cx="45" cy="45" r="36" fill="none" stroke="#d4820a" stroke-width="10"
+              stroke-dasharray="150.8 75.4" stroke-linecap="round"/>
           </svg>
-          <div class="donut-center">
-            <div class="donut-center-val c-cyan">100%</div>
-            <div class="donut-center-lbl">receita</div>
+          <div class="score-center">
+            <div class="score-num" style="color:var(--amber)">62</div>
+            <div class="score-lbl">score</div>
           </div>
         </div>
-        <div class="donut-legend">
-          <div class="dl-item"><div class="dl-dot" style="background:var(--red)"></div><div class="dl-label">Parcelas</div><div class="dl-val c-red">52%</div></div>
-          <div class="dl-item"><div class="dl-dot" style="background:var(--amber)"></div><div class="dl-label">Vida/rotina</div><div class="dl-val c-amber">16%</div></div>
-          <div class="dl-item"><div class="dl-dot" style="background:var(--purple)"></div><div class="dl-label">Assinaturas</div><div class="dl-val c-purple">6%</div></div>
-          <div class="dl-item"><div class="dl-dot" style="background:var(--green)"></div><div class="dl-label">Sobra</div><div class="dl-val c-green">19%</div></div>
-          <div class="dl-item"><div class="dl-dot" style="background:var(--ink3)"></div><div class="dl-label">Outros</div><div class="dl-val" style="color:var(--ink3)">7%</div></div>
+        <div class="score-info">
+          <div class="score-status" style="color:var(--amber)">Atenção Necessária</div>
+          <div class="score-desc">81% da receita comprometida. Margem apertada mas com <strong>plano claro</strong> de melhora. Em Agosto você estará em 66% — zona saudável.</div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- ALERTAS -->
+  <div class="sec">
+    <div class="sec-label">Pontos de Atenção</div>
+    <div class="alert red">
+      <div class="alert-icon">🔴</div>
+      <div><div class="alert-title red">Orçamento 81% comprometido</div><div class="alert-desc">Qualquer imprevisto acima de R$1.378 entra no cartão. Construir reserva de R$1.500 até Agosto é prioridade.</div></div>
+    </div>
+    <div class="alert amber">
+      <div class="alert-icon">⚠️</div>
+      <div><div class="alert-title amber">Alimentação fora: comportamento de risco</div><div class="alert-desc">McDonald's, Burger King, Bob's, sorveterias, Quatro em 1 — apenas nos primeiros 13 dias: ~R$225. Projeção mensal: R$520. Potencial de corte sem sacrifício: R$200/mês.</div></div>
+    </div>
+    <div class="alert amber">
+      <div class="alert-icon">💊</div>
+      <div><div class="alert-title amber">Mounjaro: R$21.353/ano</div><div class="alert-desc">Pausa de Jun/Jul decidida e correta. No retorno em Agosto, avaliar com médico dose reduzida — pode economizar R$500–900/mês permanentemente.</div></div>
+    </div>
+    <div class="alert green">
+      <div class="alert-icon">✅</div>
+      <div><div class="alert-title green">Plano 30/05 vai liberar R$580/mês</div><div class="alert-desc">Quitar 6 dívidas + adiantar Teclado reduz o cartão permanentemente. Executar no dia 30 conforme planejado.</div></div>
+    </div>
+    <div class="alert blue">
+      <div class="alert-icon">📈</div>
+      <div><div class="alert-title blue">SAP + Faculdade: maior ativo</div><div class="alert-desc">Seu investimento em qualificação é o que mais vai mover o ponteiro. Em 12–24 meses: +R$500–2.000/mês. Continue sem parar.</div></div>
     </div>
   </div>
 
   <!-- RECEITA -->
   <div class="sec">
-    <div class="sec-tag">Entradas</div>
-    <div class="sec-title">Receita Mensal 💚</div>
+    <div class="sec-label">Receita</div>
     <div class="card">
-      <div class="receita-bar">
-        <div class="rb-label">Iury (líquido)</div>
-        <div class="rb-track"><div class="rb-fill" style="width:76%;background:linear-gradient(90deg,var(--cyan),var(--green));"></div></div>
-        <div class="rb-val c-green">R$5.500</div>
-      </div>
-      <div class="receita-bar">
-        <div class="rb-label">Amanda</div>
-        <div class="rb-track"><div class="rb-fill" style="width:22%;background:linear-gradient(90deg,var(--purple),var(--pink));"></div></div>
-        <div class="rb-val c-purple">R$1.580</div>
-      </div>
-      <div class="receita-bar">
-        <div class="rb-label">🎬 Streaming família</div>
-        <div class="rb-track"><div class="rb-fill" style="width:2%;background:var(--amber);"></div></div>
-        <div class="rb-val c-amber">+R$116</div>
-      </div>
-      <div style="margin-top:12px;padding:12px;background:var(--s2);border-radius:12px;display:flex;justify-content:space-between;align-items:center;">
-        <span style="font-size:13px;font-weight:700;">Total disponível</span>
-        <span style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--green);">R$ 7.196</span>
-      </div>
+      <div class="stat-row"><span class="stat-row-label">Salário Iury (líquido c/ desconto)</span><span class="stat-row-val" style="color:var(--green)">R$ 5.500,00</span></div>
+      <div class="stat-row"><span class="stat-row-label">Salário Amanda</span><span class="stat-row-val" style="color:var(--green)">R$ 1.580,00</span></div>
+      <div class="stat-row"><span class="stat-row-label">🎬 Streaming compartilhado (irmã + pai)</span><span class="stat-row-val" style="color:var(--green)">+ R$ 116,00</span></div>
+      <div class="stat-row total"><span class="stat-row-label">Total disponível</span><span class="stat-row-val" style="color:var(--green)">R$ 7.196,00</span></div>
     </div>
   </div>
 
   <!-- FATURAS -->
   <div class="sec">
-    <div class="sec-tag">Faturas Maio 2026</div>
-    <div class="sec-title">Seus Cartões 💳</div>
+    <div class="sec-label">Faturas Maio 2026</div>
     <div class="card">
-      <div style="display:flex;flex-direction:column;gap:10px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:rgba(255,68,102,.08);border:1px solid rgba(255,68,102,.2);border-radius:12px;">
-          <div>
-            <div style="font-size:13px;font-weight:700;">🔴 Santander Principal</div>
-            <div style="font-size:10px;color:var(--ink3);margin-top:2px;">venc. 07/05 · parcelas + variáveis</div>
-          </div>
-          <div style="text-align:right;"><div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--red);">R$3.506</div></div>
-        </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:rgba(255,179,71,.08);border:1px solid rgba(255,179,71,.2);border-radius:12px;">
-          <div>
-            <div style="font-size:13px;font-weight:700;">🟡 Carrefour</div>
-            <div style="font-size:10px;color:var(--ink3);margin-top:2px;">venc. 02/05 · mercado + parcelas</div>
-          </div>
-          <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--amber);">R$760</div>
-        </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:rgba(180,127,255,.08);border:1px solid rgba(180,127,255,.2);border-radius:12px;">
-          <div>
-            <div style="font-size:13px;font-weight:700;">🟠 Riachuelo</div>
-            <div style="font-size:10px;color:var(--ink3);margin-top:2px;">venc. 13/05 · roupas</div>
-          </div>
-          <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--purple);">R$267</div>
-        </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:rgba(0,255,157,.08);border:1px solid rgba(0,255,157,.2);border-radius:12px;">
-          <div>
-            <div style="font-size:13px;font-weight:700;">🟢 Santander Assinaturas</div>
-            <div style="font-size:10px;color:var(--ink3);margin-top:2px;">venc. 07/05 · só assinaturas</div>
-          </div>
-          <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--green);">R$125</div>
-        </div>
-        <div style="padding:12px;background:var(--s2);border-radius:12px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);">
-          <span style="font-weight:700;">Total faturas maio</span>
-          <span style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--red);">R$4.660</span>
-        </div>
-      </div>
+      <div class="stat-row"><span class="stat-row-label">🔴 Santander Principal <span style="font-size:10px;color:var(--ink3)">venc.07/05</span></span><span class="stat-row-val" style="color:var(--red)">R$ 3.506,79</span></div>
+      <div class="stat-row"><span class="stat-row-label">🟡 Carrefour <span style="font-size:10px;color:var(--ink3)">venc.02/05</span></span><span class="stat-row-val" style="color:var(--amber)">R$ 760,23</span></div>
+      <div class="stat-row"><span class="stat-row-label">🟠 Riachuelo <span style="font-size:10px;color:var(--ink3)">venc.13/05</span></span><span class="stat-row-val" style="color:var(--amber)">R$ 267,94</span></div>
+      <div class="stat-row"><span class="stat-row-label">🟢 Santander Assinaturas <span style="font-size:10px;color:var(--ink3)">venc.07/05</span></span><span class="stat-row-val" style="color:var(--green)">R$ 125,45</span></div>
+      <div class="stat-row total"><span class="stat-row-label">Total faturas</span><span class="stat-row-val" style="color:var(--red)">R$ 4.660,41</span></div>
     </div>
   </div>
 
-  <!-- PLANO 30/05 -->
+  <!-- BALANÇO -->
   <div class="sec" style="margin-bottom:8px;">
-    <div class="sec-tag">Estratégia</div>
-    <div class="sec-title">Plano 30 de Maio ⚡</div>
-    <div class="card" style="background:linear-gradient(135deg,#0d1f1a,#0d0d1f);border-color:rgba(0,229,255,.2);">
-      <div class="card-glow" style="background:radial-gradient(circle,var(--cyan-glow),transparent);"></div>
-      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);margin-bottom:8px;">Valor extra disponível</div>
-      <div style="font-family:'Syne',sans-serif;font-size:42px;font-weight:800;color:var(--cyan);line-height:1;margin-bottom:16px;">R$2.300<span style="font-size:20px;color:var(--ink3)">,00</span></div>
-      <div style="display:flex;flex-direction:column;gap:8px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:rgba(0,229,255,.06);border:1px solid rgba(0,229,255,.1);border-radius:12px;">
-          <span style="font-size:12px;">✅ 6 dívidas eliminadas para sempre</span>
-          <span style="font-size:13px;font-weight:800;color:var(--cyan);">R$2.050</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:rgba(180,127,255,.06);border:1px solid rgba(180,127,255,.1);border-radius:12px;">
-          <span style="font-size:12px;">📉 Teclado: 13x → 10x restantes</span>
-          <span style="font-size:13px;font-weight:800;color:var(--purple);">R$231</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:rgba(0,255,157,.1);border:1px solid rgba(0,255,157,.2);border-radius:12px;">
-          <span style="font-size:13px;font-weight:800;color:var(--green);">💚 Alívio mensal permanente</span>
-          <span style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--green);">~R$580/mês</span>
-        </div>
-      </div>
+    <div class="sec-label">Balanço do Mês</div>
+    <div class="card">
+      <div class="stat-row"><span class="stat-row-label">Receita total</span><span class="stat-row-val" style="color:var(--green)">R$ 7.196,00</span></div>
+      <div class="stat-row"><span class="stat-row-label">(−) Faturas dos cartões</span><span class="stat-row-val" style="color:var(--red)">R$ 4.660,41</span></div>
+      <div class="stat-row"><span class="stat-row-label">(−) Gastos estimados do dia a dia</span><span class="stat-row-val" style="color:var(--red)">R$ 1.157,59</span></div>
+      <div class="stat-row total"><span class="stat-row-label">Sobra projetada</span><span class="stat-row-val" style="color:var(--amber)">R$ 1.378,00</span></div>
+    </div>
+    <div style="background:var(--ink);color:#fff;border-radius:14px;padding:16px;margin-bottom:12px;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:6px;">Após Plano 30/05</div>
+      <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:#fff;margin-bottom:4px;">+ R$ 580,00<span style="font-size:14px;font-weight:400;color:rgba(255,255,255,.5)">/mês permanente</span></div>
+      <div style="font-size:12px;color:rgba(255,255,255,.6);">6 dívidas eliminadas · Sobra passa para ~R$ 1.958/mês</div>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════
+<!-- ════════════════════════════════════
      TAB 2 — PRA VIVER
-══════════════════════════════════════ -->
+════════════════════════════════════ -->
 <div id="tab-vida" class="tab">
   <div class="hdr">
-    <div class="hdr-glow" style="background:radial-gradient(circle,var(--amber-glow),transparent 70%);"></div>
-    <div class="hdr-tag" style="color:var(--amber);">Estilo de Vida</div>
-    <div class="hdr-title">Pra <span style="color:var(--amber)">Viver</span> 🏡</div>
-    <div style="font-size:13px;color:var(--ink2);margin-top:4px;">O que sustenta a rotina da família todo mês</div>
+    <div class="hdr-eyebrow">Análise de Comportamento</div>
+    <div class="hdr-title">Pra <span>Viver</span></div>
+    <div class="hdr-sub">Projeção baseada em gastos reais de 01–13/04 · Dia 13 de 30</div>
   </div>
 
-  <!-- TOTAIS -->
-  <div class="sg">
-    <div class="sc amber">
-      <div class="sc-lbl">Necessidades</div>
-      <div class="sc-val c-amber">R$2.853</div>
-      <div class="sc-sub">essencial família</div>
-    </div>
-    <div class="sc red">
-      <div class="sc-lbl">Padrão de vida</div>
-      <div class="sc-val c-red">R$680</div>
-      <div class="sc-sub">rotina e conforto</div>
+  <!-- PROJEÇÃO GERAL -->
+  <div class="sec">
+    <div class="sec-label">Projeção do Mês</div>
+    <div class="alert amber">
+      <div class="alert-icon">📊</div>
+      <div><div class="alert-title amber">Estamos no dia 13 de 30</div><div class="alert-desc">43% do mês passou. A análise abaixo projeta o mês completo com base no seu comportamento real observado até hoje.</div></div>
     </div>
   </div>
 
-  <div style="padding:0 16px;margin-top:20px;">
-    <!-- TRANSPORTE -->
-    <div style="margin-bottom:16px;">
-      <div class="sec-tag" style="margin-bottom:12px;">Transporte</div>
-      <div class="life-grid">
-        <div class="life-card" onclick="showLifeDetail('moto')">
-          <div class="life-card-glow" style="background:radial-gradient(circle,rgba(0,229,255,.15),transparent);"></div>
-          <div class="life-illustration">
-            <svg class="illus" viewBox="0 0 64 64" fill="none">
-              <rect x="8" y="34" width="48" height="14" rx="7" fill="rgba(0,229,255,.1)" stroke="rgba(0,229,255,.3)" stroke-width="1.5"/>
-              <rect x="18" y="26" width="28" height="14" rx="4" fill="rgba(0,229,255,.15)" stroke="rgba(0,229,255,.4)" stroke-width="1.5"/>
-              <circle cx="16" cy="46" r="7" fill="rgba(0,229,255,.1)" stroke="var(--cyan)" stroke-width="2"/>
-              <circle cx="16" cy="46" r="3" fill="var(--cyan)" opacity=".6"/>
-              <circle cx="48" cy="46" r="7" fill="rgba(0,229,255,.1)" stroke="var(--cyan)" stroke-width="2"/>
-              <circle cx="48" cy="46" r="3" fill="var(--cyan)" opacity=".6"/>
-              <path d="M22 26 L28 18 L40 18 L46 26" stroke="rgba(0,229,255,.5)" stroke-width="1.5" fill="rgba(0,229,255,.08)"/>
-              <rect x="28" y="30" width="8" height="6" rx="1" fill="rgba(0,229,255,.3)"/>
-              <path d="M10 36 L8 44" stroke="var(--cyan)" stroke-width="1.5" opacity=".4"/>
-              <path d="M54 36 L56 44" stroke="var(--cyan)" stroke-width="1.5" opacity=".4"/>
-            </svg>
-          </div>
-          <div class="life-name">MOTO ELÉTRICA</div>
-          <div class="life-val c-cyan">R$750</div>
-          <div class="life-sub">parcela mensal</div>
+  <!-- TRANSPORTE -->
+  <div class="sec">
+    <div class="sec-label">Transporte</div>
+    <div class="vida-item">
+      <div class="vida-header" onclick="toggleVida('transp')">
+        <div class="vida-icon" style="background:#fff8e8;">🚗</div>
+        <div class="vida-info">
+          <div class="vida-name">Transporte Total</div>
+          <div class="vida-sub">Combustível · Moto · Uber · Estac.</div>
         </div>
-        <div class="life-card" onclick="showLifeDetail('gasolina')">
-          <div class="life-card-glow" style="background:radial-gradient(circle,rgba(255,179,71,.15),transparent);"></div>
-          <div class="life-illustration">
-            <svg class="illus" viewBox="0 0 64 64" fill="none">
-              <ellipse cx="32" cy="48" rx="18" ry="5" fill="rgba(255,179,71,.08)"/>
-              <rect x="16" y="24" width="32" height="22" rx="5" fill="rgba(255,179,71,.1)" stroke="rgba(255,179,71,.4)" stroke-width="1.5"/>
-              <rect x="22" y="16" width="20" height="14" rx="4" fill="rgba(255,179,71,.15)" stroke="rgba(255,179,71,.5)" stroke-width="1.5"/>
-              <circle cx="20" cy="44" r="6" fill="rgba(255,179,71,.1)" stroke="var(--amber)" stroke-width="2"/>
-              <circle cx="20" cy="44" r="2.5" fill="var(--amber)" opacity=".7"/>
-              <circle cx="44" cy="44" r="6" fill="rgba(255,179,71,.1)" stroke="var(--amber)" stroke-width="2"/>
-              <circle cx="44" cy="44" r="2.5" fill="var(--amber)" opacity=".7"/>
-              <rect x="28" y="18" width="8" height="8" rx="1" fill="rgba(255,179,71,.3)"/>
-              <path d="M48 28 L56 26 L56 36 L52 38" stroke="var(--amber)" stroke-width="1.5" fill="none" opacity=".5"/>
-              <circle cx="56" cy="30" r="2" fill="var(--amber)" opacity=".5"/>
-            </svg>
-          </div>
-          <div class="life-name">COMBUSTÍVEL</div>
-          <div class="life-val c-amber">~R$280</div>
-          <div class="life-sub">estimado/mês</div>
+        <div class="vida-right">
+          <div class="vida-val" style="color:var(--amber)">~R$ 1.282</div>
+          <div class="vida-freq">projeção mensal</div>
+        </div>
+      </div>
+      <div id="vida-transp" class="vida-expand">
+        <div class="vida-expand-row"><span class="vida-expand-label">🛵 Moto Elétrica (parcela fixa)</span><span class="vida-expand-val" style="color:var(--blue)">R$ 750,00</span></div>
+        <div class="vida-expand-row"><span class="vida-expand-label">⛽ Gasolina — 4 abast. observados</span><span class="vida-expand-val" style="color:var(--amber)">~R$ 480,00</span></div>
+        <div class="vida-expand-row"><span class="vida-expand-label">🚕 Uber (uso pontual)</span><span class="vida-expand-val">R$ 19,95</span></div>
+        <div class="vida-expand-row"><span class="vida-expand-label">🅿️ Estacionamento (2x observado)</span><span class="vida-expand-val">~R$ 32,00</span></div>
+        <div style="margin-top:10px;">
+          <div style="font-size:10px;font-weight:700;color:var(--amber);margin-bottom:4px;">📊 Análise de comportamento</div>
+          <div style="font-size:11px;color:var(--ink2);line-height:1.6;">Você abasteceu nos dias 04, 09, 12 e 23/04. Ritmo de ~3–4x/mês = R$245–320 em gasolina. A moto elétrica deveria substituir trajetos curtos — se estiver em uso reduz combustível em R$60–100.</div>
+        </div>
+        <span class="vida-tag" style="background:var(--amber-l);color:var(--amber);">⚠️ Gasolina alta — usar mais a moto elétrica</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ALIMENTAÇÃO -->
+  <div class="sec">
+    <div class="sec-label">Alimentação — Ponto Crítico</div>
+    <div class="vida-item">
+      <div class="vida-header" onclick="toggleVida('alim')">
+        <div class="vida-icon" style="background:#fff3f3;">🍽️</div>
+        <div class="vida-info">
+          <div class="vida-name">Alimentação Total</div>
+          <div class="vida-sub">Mercado · Fora · Delivery</div>
+        </div>
+        <div class="vida-right">
+          <div class="vida-val" style="color:var(--red)">~R$ 1.180</div>
+          <div class="vida-freq">projeção mensal</div>
+        </div>
+      </div>
+      <div id="vida-alim" class="vida-expand">
+        <div class="vida-expand-row"><span class="vida-expand-label">🛒 Mercado (Assaí, Guanabara, outros)</span><span class="vida-expand-val" style="color:var(--green)">~R$ 420,00</span></div>
+        <div class="vida-expand-row"><span class="vida-expand-label">🍔 Fast food (MC, BK, Bob's, Quatro em 1)</span><span class="vida-expand-val" style="color:var(--red)">~R$ 520,00</span></div>
+        <div class="vida-expand-row"><span class="vida-expand-label">🛵 Delivery (King Marmitas, iFood)</span><span class="vida-expand-val" style="color:var(--amber)">~R$ 120,00</span></div>
+        <div class="vida-expand-row"><span class="vida-expand-label">🍦 Sorveterias (Eskimo, Campo Grande)</span><span class="vida-expand-val">~R$ 120,00</span></div>
+        <div style="margin-top:10px;">
+          <div style="font-size:10px;font-weight:700;color:var(--red);margin-bottom:4px;">🚨 Análise crítica</div>
+          <div style="font-size:11px;color:var(--ink2);line-height:1.6;">Em 13 dias você gastou ~R$225 em fast food e lanches. Extrapolando: R$520/mês só em fast food. Mercado estimado em R$420 — saudável. O problema é a frequência de fast food: McDonald's, BK e Bob's em sequência de dias próximos.</div>
+        </div>
+        <span class="vida-tag" style="background:var(--red-l);color:var(--red);">🚨 Fast food é o maior gasto evitável — R$200–300/mês de economia possível</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDUCAÇÃO -->
+  <div class="sec">
+    <div class="sec-label">Educação</div>
+    <div class="vida-item">
+      <div class="vida-header" onclick="toggleVida('educ')">
+        <div class="vida-icon" style="background:#eef3fc;">🎓</div>
+        <div class="vida-info">
+          <div class="vida-name">Educação Total</div>
+          <div class="vida-sub">Escola · Faculdade · Material</div>
+        </div>
+        <div class="vida-right">
+          <div class="vida-val" style="color:var(--blue)">R$ 907,01</div>
+          <div class="vida-freq">mensal fixo</div>
+        </div>
+      </div>
+      <div id="vida-educ" class="vida-expand">
+        <div class="vida-expand-row"><span class="vida-expand-label">🏫 Escola Isac (parcela 5/12)</span><span class="vida-expand-val" style="color:var(--blue)">R$ 600,37</span></div>
+        <div class="vida-expand-row"><span class="vida-expand-label">📚 Faculdade Iury (parcela 4/31)</span><span class="vida-expand-val" style="color:var(--blue)">R$ 140,35</span></div>
+        <div class="vida-expand-row"><span class="vida-expand-label">📖 Material Escolar (Bazar Cesp)</span><span class="vida-expand-val">R$ 166,29</span></div>
+        <div style="margin-top:10px;">
+          <div style="font-size:10px;font-weight:700;color:var(--blue);margin-bottom:4px;">💡 Análise estratégica</div>
+          <div style="font-size:11px;color:var(--ink2);line-height:1.6;">Escola Isac é o maior gasto educacional. Vale conversar com a direção sobre desconto por pontualidade — escolas raramente divulgam mas geralmente têm 5–15%. Na Faculdade: SAP é a alavanca de renda mais rápida — cada módulo certificado vale.</div>
+        </div>
+        <span class="vida-tag" style="background:var(--blue-l);color:var(--blue);">💡 Pergunte desconto de pontualidade na escola</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SAÚDE -->
+  <div class="sec">
+    <div class="sec-label">Saúde & Bem-estar</div>
+    <div class="vida-item">
+      <div class="vida-header" onclick="toggleVida('saude')">
+        <div class="vida-icon" style="background:#fdf0ee;">💊</div>
+        <div class="vida-info">
+          <div class="vida-name">Saúde Total</div>
+          <div class="vida-sub">Mounjaro · Academia · Farmácia</div>
+        </div>
+        <div class="vida-right">
+          <div class="vida-val" style="color:var(--red)">R$ 1.957</div>
+          <div class="vida-freq">mensal (com Mounjaro)</div>
+        </div>
+      </div>
+      <div id="vida-saude" class="vida-expand">
+        <div class="vida-expand-row"><span class="vida-expand-label">💉 Mounjaro (custo mensal)</span><span class="vida-expand-val" style="color:var(--red)">R$ 1.779,44</span></div>
+        <div class="vida-expand-row"><span class="vida-expand-label">💪 TotalPass (academia)</span><span class="vida-expand-val">R$ 30,00</span></div>
+        <div class="vida-expand-row"><span class="vida-expand-label">💊 Farmácia (estimado)</span><span class="vida-expand-val">~R$ 80,00</span></div>
+        <div class="vida-expand-row"><span class="vida-expand-label">👓 Óculos Isac (parcela)</span><span class="vida-expand-val">R$ 45,00</span></div>
+        <div style="margin-top:10px;padding:10px;background:var(--red-l);border-radius:10px;">
+          <div style="font-size:11px;color:var(--red);font-weight:600;line-height:1.5;">⏸️ Mounjaro pausado Jun/Jul = R$3.558 liberados. Em Agosto, conversar com médico sobre dose reduzida — pode economizar R$500–900/mês de forma permanente.</div>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- CASA E CONECTIVIDADE -->
-    <div style="margin-bottom:16px;">
-      <div class="sec-tag" style="margin-bottom:12px;">Casa & Conectividade</div>
-      <div class="life-grid">
-        <div class="life-card" onclick="showLifeDetail('internet')">
-          <div class="life-card-glow" style="background:radial-gradient(circle,var(--purple-glow),transparent);"></div>
-          <div class="life-illustration">
-            <svg class="illus" viewBox="0 0 64 64" fill="none">
-              <path d="M10 30 Q32 10 54 30" stroke="rgba(180,127,255,.3)" stroke-width="2" fill="none"/>
-              <path d="M16 36 Q32 20 48 36" stroke="rgba(180,127,255,.5)" stroke-width="2" fill="none"/>
-              <path d="M22 42 Q32 32 42 42" stroke="var(--purple)" stroke-width="2" fill="none"/>
-              <circle cx="32" cy="48" r="4" fill="var(--purple)" opacity=".8"/>
-              <path d="M32 48 L32 52" stroke="var(--purple)" stroke-width="2"/>
-              <rect x="24" y="52" width="16" height="3" rx="1.5" fill="rgba(180,127,255,.4)"/>
-            </svg>
-          </div>
-          <div class="life-name">INTERNET FIBRA</div>
-          <div class="life-val c-purple">R$112</div>
-          <div class="life-sub">Nio · mensal</div>
+  <!-- CONECTIVIDADE -->
+  <div class="sec">
+    <div class="sec-label">Conectividade & Streaming</div>
+    <div class="vida-item">
+      <div class="vida-header" onclick="toggleVida('conectiv')">
+        <div class="vida-icon" style="background:#f5f0fc;">📱</div>
+        <div class="vida-info">
+          <div class="vida-name">Conectividade Total</div>
+          <div class="vida-sub">Internet · Telefones · Streaming</div>
         </div>
-        <div class="life-card" onclick="showLifeDetail('telefone')">
-          <div class="life-card-glow" style="background:radial-gradient(circle,var(--cyan-glow),transparent);"></div>
-          <div class="life-illustration">
-            <svg class="illus" viewBox="0 0 64 64" fill="none">
-              <rect x="20" y="10" width="24" height="42" rx="5" fill="rgba(0,229,255,.08)" stroke="rgba(0,229,255,.3)" stroke-width="1.5"/>
-              <rect x="24" y="16" width="16" height="26" rx="2" fill="rgba(0,229,255,.12)"/>
-              <circle cx="32" cy="47" r="2.5" fill="rgba(0,229,255,.5)"/>
-              <path d="M28 13 L36 13" stroke="rgba(0,229,255,.4)" stroke-width="1.5" stroke-linecap="round"/>
-              <rect x="26" y="20" width="12" height="2" rx="1" fill="rgba(0,229,255,.3)"/>
-              <rect x="26" y="25" width="8" height="2" rx="1" fill="rgba(0,229,255,.2)"/>
-              <!-- segundo telefone -->
-              <rect x="30" y="14" width="18" height="32" rx="4" fill="rgba(180,127,255,.08)" stroke="rgba(180,127,255,.3)" stroke-width="1.5"/>
-              <rect x="33" y="19" width="12" height="20" rx="2" fill="rgba(180,127,255,.1)"/>
-              <circle cx="39" cy="42" r="2" fill="rgba(180,127,255,.4)"/>
-            </svg>
-          </div>
-          <div class="life-name">TELEFONES ×2</div>
-          <div class="life-val c-cyan">R$79,90</div>
-          <div class="life-sub">Claro · Iury + Amanda</div>
+        <div class="vida-right">
+          <div class="vida-val" style="color:var(--purple)">R$ 282</div>
+          <div class="vida-freq">mensal (custo real)</div>
+        </div>
+      </div>
+      <div id="vida-conectiv" class="vida-expand">
+        <div class="vida-expand-row"><span class="vida-expand-label">📶 Internet Fibra (Nio)</span><span class="vida-expand-val">R$ 112,44</span></div>
+        <div class="vida-expand-row"><span class="vida-expand-label">📱 Claro Iury + Amanda (2 linhas)</span><span class="vida-expand-val">R$ 79,90</span></div>
+        <div class="vida-expand-row"><span class="vida-expand-label">🎬 Netflix + Disney+ + Amazon (bruto)</span><span class="vida-expand-val">R$ 172,50</span></div>
+        <div class="vida-expand-row"><span class="vida-expand-label">💚 Divisão família (irmã + pai)</span><span class="vida-expand-val" style="color:var(--green)">− R$ 116,00</span></div>
+        <div class="vida-expand-row" style="font-weight:700;"><span class="vida-expand-label">Streaming custo real</span><span class="vida-expand-val" style="color:var(--green)">R$ 56,50</span></div>
+        <div style="margin-top:8px;">
+          <div style="font-size:10px;font-weight:700;color:var(--purple);margin-bottom:4px;">💡 Ação recomendada</div>
+          <div style="font-size:11px;color:var(--ink2);">Disney Plus está no Santander Principal — migrar para Santander Assinaturas centraliza tudo e facilita controle.</div>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- ENTRETENIMENTO -->
-    <div style="margin-bottom:16px;">
-      <div class="sec-tag" style="margin-bottom:12px;">Entretenimento</div>
-      <div class="life-card wide" onclick="showLifeDetail('streaming')" style="flex-direction:row;text-align:left;justify-content:space-between;padding:16px 20px;">
-        <div class="life-card-glow" style="background:radial-gradient(circle,rgba(255,110,180,.1),transparent);left:-20px;top:-20px;transform:none;"></div>
-        <div style="display:flex;align-items:center;gap:14px;flex:1;">
-          <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
-            <rect width="52" height="52" rx="14" fill="rgba(255,110,180,.08)" stroke="rgba(255,110,180,.2)" stroke-width="1.5"/>
-            <rect x="10" y="14" width="32" height="20" rx="3" fill="rgba(255,110,180,.15)" stroke="rgba(255,110,180,.4)" stroke-width="1.5"/>
-            <rect x="14" y="18" width="24" height="12" rx="1" fill="rgba(255,110,180,.1)"/>
-            <polygon points="22,22 22,28 28,25" fill="var(--pink)" opacity=".8"/>
-            <rect x="20" y="34" width="12" height="3" rx="1" fill="rgba(255,110,180,.3)"/>
-            <rect x="18" y="37" width="16" height="2" rx="1" fill="rgba(255,110,180,.2)"/>
-            <circle cx="38" cy="16" r="6" fill="rgba(255,110,180,.15)" stroke="rgba(255,110,180,.3)" stroke-width="1"/>
-            <text x="35" y="20" font-size="8" fill="var(--pink)" opacity=".9">▶</text>
-          </svg>
-          <div>
-            <div class="life-name" style="font-size:12px;">STREAMING</div>
-            <div style="font-size:11px;color:var(--ink3);margin-top:2px;">Netflix · Disney+ · Amazon</div>
-            <div style="font-size:10px;color:var(--green);margin-top:4px;">💚 Divisão família: −R$116/mês</div>
-          </div>
+  <!-- LAZER -->
+  <div class="sec" style="margin-bottom:8px;">
+    <div class="sec-label">Lazer & Família</div>
+    <div class="vida-item">
+      <div class="vida-header" onclick="toggleVida('lazer')">
+        <div class="vida-icon" style="background:#e8f5ee;">🎉</div>
+        <div class="vida-info">
+          <div class="vida-name">Lazer Total</div>
+          <div class="vida-sub">Cinema · Datas · Passeios</div>
         </div>
-        <div style="text-align:right;">
-          <div class="life-val c-pink" style="font-size:18px;">R$172</div>
-          <div class="life-sub">bruto · R$56 real</div>
+        <div class="vida-right">
+          <div class="vida-val" style="color:var(--green)">~R$ 320</div>
+          <div class="vida-freq">projeção mensal</div>
         </div>
       </div>
-    </div>
-
-    <!-- EDUCAÇÃO -->
-    <div style="margin-bottom:16px;">
-      <div class="sec-tag" style="margin-bottom:12px;">Educação</div>
-      <div class="life-grid">
-        <div class="life-card" onclick="showLifeDetail('escola')">
-          <div class="life-card-glow" style="background:radial-gradient(circle,var(--cyan-glow),transparent);"></div>
-          <div class="life-illustration">
-            <svg class="illus" viewBox="0 0 64 64" fill="none">
-              <rect x="10" y="22" width="44" height="30" rx="4" fill="rgba(0,229,255,.08)" stroke="rgba(0,229,255,.25)" stroke-width="1.5"/>
-              <polygon points="8,24 32,10 56,24" fill="rgba(0,229,255,.12)" stroke="rgba(0,229,255,.35)" stroke-width="1.5"/>
-              <rect x="24" y="36" width="16" height="16" rx="2" fill="rgba(0,229,255,.15)"/>
-              <rect x="28" y="28" width="8" height="8" rx="1" fill="rgba(0,229,255,.2)"/>
-              <path d="M20 28 L20 34" stroke="rgba(0,229,255,.3)" stroke-width="1.5"/>
-              <path d="M44 28 L44 34" stroke="rgba(0,229,255,.3)" stroke-width="1.5"/>
-              <circle cx="32" cy="14" r="3" fill="var(--cyan)" opacity=".5"/>
-            </svg>
-          </div>
-          <div class="life-name">ESCOLA ISAC</div>
-          <div class="life-val c-cyan">R$600</div>
-          <div class="life-sub">educação do filho</div>
+      <div id="vida-lazer" class="vida-expand">
+        <div class="vida-expand-row"><span class="vida-expand-label">🎬 Ingresso.com (cinema)</span><span class="vida-expand-val">R$ 120,86</span></div>
+        <div class="vida-expand-row"><span class="vida-expand-label">🐣 Vivian Festas (Páscoa)</span><span class="vida-expand-val">R$ 188,37</span></div>
+        <div class="vida-expand-row"><span class="vida-expand-label">🎁 Presentes (Maitê/Amanda)</span><span class="vida-expand-val">R$ 17,50</span></div>
+        <div style="margin-top:8px;">
+          <div style="font-size:11px;color:var(--ink2);">Páscoa foi gasto pontual — não se repete. Cinema e lazer estão em nível saudável. Família ativa e feliz é importante! 😊</div>
         </div>
-        <div class="life-card" onclick="showLifeDetail('faculdade')">
-          <div class="life-card-glow" style="background:radial-gradient(circle,var(--green-glow),transparent);"></div>
-          <div class="life-illustration">
-            <svg class="illus" viewBox="0 0 64 64" fill="none">
-              <path d="M12 28 L32 18 L52 28 L32 38 Z" fill="rgba(0,255,157,.1)" stroke="rgba(0,255,157,.4)" stroke-width="1.5"/>
-              <path d="M20 32 L20 46 L32 50 L44 46 L44 32" fill="rgba(0,255,157,.08)" stroke="rgba(0,255,157,.3)" stroke-width="1.5"/>
-              <path d="M52 28 L52 40" stroke="rgba(0,255,157,.4)" stroke-width="2"/>
-              <circle cx="52" cy="42" r="3" fill="var(--green)" opacity=".6"/>
-              <path d="M28 38 L28 50" stroke="rgba(0,255,157,.3)" stroke-width="1.5"/>
-              <path d="M36 38 L36 50" stroke="rgba(0,255,157,.3)" stroke-width="1.5"/>
-            </svg>
-          </div>
-          <div class="life-name">FACULDADE IURY</div>
-          <div class="life-val c-green">R$140</div>
-          <div class="life-sub">investimento futuro 💪</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- SAÚDE -->
-    <div style="margin-bottom:16px;">
-      <div class="sec-tag" style="margin-bottom:12px;">Saúde & Bem-estar</div>
-      <div class="life-grid">
-        <div class="life-card" onclick="showLifeDetail('mounjaro')">
-          <div class="life-card-glow" style="background:radial-gradient(circle,var(--red-glow),transparent);"></div>
-          <div class="life-illustration">
-            <svg class="illus" viewBox="0 0 64 64" fill="none">
-              <path d="M28 14 L28 36" stroke="rgba(255,68,102,.5)" stroke-width="3" stroke-linecap="round"/>
-              <path d="M22 22 L28 14 L34 22" fill="rgba(255,68,102,.15)" stroke="rgba(255,68,102,.4)" stroke-width="1.5"/>
-              <rect x="24" y="36" width="8" height="12" rx="2" fill="rgba(255,68,102,.15)" stroke="rgba(255,68,102,.3)" stroke-width="1.5"/>
-              <circle cx="28" cy="52" r="3" fill="var(--red)" opacity=".5"/>
-              <path d="M36 28 Q44 24 44 32 Q44 40 36 38" stroke="rgba(255,68,102,.3)" stroke-width="1.5" fill="none"/>
-              <rect x="38" y="20" width="14" height="22" rx="4" fill="rgba(255,68,102,.06)" stroke="rgba(255,68,102,.2)" stroke-width="1"/>
-              <rect x="41" y="24" width="8" height="14" rx="2" fill="rgba(255,68,102,.08)"/>
-              <path d="M45 24 L45 20" stroke="rgba(255,68,102,.4)" stroke-width="1.5"/>
-            </svg>
-          </div>
-          <div class="life-name">MOUNJARO</div>
-          <div class="life-val c-red">R$1.779</div>
-          <div class="life-sub">⏸️ pausado Jun/Jul</div>
-        </div>
-        <div class="life-card" onclick="showLifeDetail('academia')">
-          <div class="life-card-glow" style="background:radial-gradient(circle,var(--amber-glow),transparent);"></div>
-          <div class="life-illustration">
-            <svg class="illus" viewBox="0 0 64 64" fill="none">
-              <rect x="8" y="28" width="8" height="8" rx="2" fill="rgba(255,179,71,.2)" stroke="rgba(255,179,71,.5)" stroke-width="1.5"/>
-              <rect x="48" y="28" width="8" height="8" rx="2" fill="rgba(255,179,71,.2)" stroke="rgba(255,179,71,.5)" stroke-width="1.5"/>
-              <rect x="14" y="24" width="8" height="16" rx="2" fill="rgba(255,179,71,.15)" stroke="rgba(255,179,71,.4)" stroke-width="1.5"/>
-              <rect x="42" y="24" width="8" height="16" rx="2" fill="rgba(255,179,71,.15)" stroke="rgba(255,179,71,.4)" stroke-width="1.5"/>
-              <rect x="22" y="30" width="20" height="4" rx="2" fill="var(--amber)" opacity=".6"/>
-              <circle cx="32" cy="20" r="6" fill="rgba(255,179,71,.1)" stroke="rgba(255,179,71,.4)" stroke-width="1.5"/>
-              <path d="M28 38 Q32 44 36 38" stroke="rgba(255,179,71,.4)" stroke-width="1.5" fill="none"/>
-            </svg>
-          </div>
-          <div class="life-name">TOTALPASS</div>
-          <div class="life-val c-amber">R$30</div>
-          <div class="life-sub">academia · bem-estar</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ALIMENTAÇÃO -->
-    <div style="margin-bottom:16px;">
-      <div class="sec-tag" style="margin-bottom:12px;">Alimentação</div>
-      <div class="life-grid">
-        <div class="life-card" onclick="showLifeDetail('mercado')">
-          <div class="life-card-glow" style="background:radial-gradient(circle,var(--green-glow),transparent);"></div>
-          <div class="life-illustration">
-            <svg class="illus" viewBox="0 0 64 64" fill="none">
-              <path d="M12 18 L16 44 L48 44 L52 18 Z" fill="rgba(0,255,157,.08)" stroke="rgba(0,255,157,.3)" stroke-width="1.5"/>
-              <path d="M8 18 L56 18" stroke="rgba(0,255,157,.3)" stroke-width="1.5"/>
-              <path d="M12 18 L10 12 L6 12" stroke="rgba(0,255,157,.4)" stroke-width="1.5" fill="none"/>
-              <circle cx="22" cy="48" r="4" fill="rgba(0,255,157,.2)" stroke="var(--green)" stroke-width="1.5"/>
-              <circle cx="42" cy="48" r="4" fill="rgba(0,255,157,.2)" stroke="var(--green)" stroke-width="1.5"/>
-              <path d="M20 26 L22 38 L42 38 L44 26 Z" fill="rgba(0,255,157,.1)"/>
-              <rect x="28" y="22" width="8" height="14" rx="1" fill="rgba(0,255,157,.15)"/>
-            </svg>
-          </div>
-          <div class="life-name">MERCADO</div>
-          <div class="life-val c-green">~R$600</div>
-          <div class="life-sub">estimado/mês</div>
-        </div>
-        <div class="life-card" onclick="showLifeDetail('fora')">
-          <div class="life-card-glow" style="background:radial-gradient(circle,var(--amber-glow),transparent);"></div>
-          <div class="life-illustration">
-            <svg class="illus" viewBox="0 0 64 64" fill="none">
-              <path d="M20 18 Q20 14 24 14 Q28 14 28 18 L28 30 Q22 32 20 30 Z" fill="rgba(255,179,71,.1)" stroke="rgba(255,179,71,.3)" stroke-width="1.5"/>
-              <path d="M28 18 Q28 14 32 14 Q36 14 36 18 L36 30 Q30 32 28 30 Z" fill="rgba(255,179,71,.1)" stroke="rgba(255,179,71,.3)" stroke-width="1.5"/>
-              <path d="M36 18 Q36 14 40 14 Q44 14 44 18 L44 30 Q38 32 36 30 Z" fill="rgba(255,179,71,.1)" stroke="rgba(255,179,71,.3)" stroke-width="1.5"/>
-              <path d="M18 30 Q32 36 46 30 L44 44 Q32 48 20 44 Z" fill="rgba(255,179,71,.15)" stroke="rgba(255,179,71,.4)" stroke-width="1.5"/>
-              <path d="M24 44 L24 52 L28 52" stroke="rgba(255,179,71,.4)" stroke-width="1.5"/>
-              <path d="M40 44 L40 52 L36 52" stroke="rgba(255,179,71,.4)" stroke-width="1.5"/>
-            </svg>
-          </div>
-          <div class="life-name">ALIMENTAÇÃO FORA</div>
-          <div class="life-val c-amber">~R$350</div>
-          <div class="life-sub">✂️ potencial de corte</div>
-        </div>
+        <span class="vida-tag" style="background:var(--green-l);color:var(--green);">✅ Lazer em nível saudável — manter</span>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════
+<!-- ════════════════════════════════════
      TAB 3 — DÍVIDAS
-══════════════════════════════════════ -->
+════════════════════════════════════ -->
 <div id="tab-dividas" class="tab">
   <div class="hdr">
-    <div class="hdr-glow" style="background:radial-gradient(circle,var(--red-glow),transparent 70%);"></div>
-    <div class="hdr-tag" style="color:var(--red);">Controle</div>
-    <div class="hdr-title">Dívidas <span style="color:var(--red)">Parceladas</span></div>
-    <div style="font-size:13px;color:var(--ink2);margin-top:4px;">Toque nas parcelas para marcar adiantamentos</div>
+    <div class="hdr-eyebrow">Controle de Parcelas</div>
+    <div class="hdr-title">Dívidas <span>Parceladas</span></div>
+    <div class="hdr-sub">Clique nas parcelas · Sempre adiante as últimas</div>
   </div>
-  <div style="padding:16px 16px 0;" id="debt-list"></div>
+
+  <!-- RESUMO -->
+  <div class="sg" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px;">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:var(--sh);">
+      <div style="font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink3);margin-bottom:4px;">Dívidas Ativas</div>
+      <div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:var(--red);" id="ov-dividas">7</div>
+      <div style="font-size:10px;color:var(--ink3);" id="ov-saldo">R$13.2k em aberto</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:var(--sh);">
+      <div style="font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink3);margin-bottom:4px;">Parcelas/mês</div>
+      <div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:var(--amber);" id="ov-parcelas-mes">—</div>
+      <div style="font-size:10px;color:var(--ink3);">comprometido no cartão</div>
+    </div>
+  </div>
+
+  <div style="padding:0 16px;" id="debt-list"></div>
 </div>
 
-<!-- ══════════════════════════════════════
-     TAB 4 — SUGESTÕES
-══════════════════════════════════════ -->
-<div id="tab-sugestoes" class="tab">
+<!-- ════════════════════════════════════
+     TAB 4 — PLANO
+════════════════════════════════════ -->
+<div id="tab-plano" class="tab">
   <div class="hdr">
-    <div class="hdr-glow" style="background:radial-gradient(circle,var(--green-glow),transparent 70%);"></div>
-    <div class="hdr-tag" style="color:var(--green);">Estratégia</div>
-    <div class="hdr-title">Plano <span style="color:var(--green)">de Ação</span> 🚀</div>
-    <div style="font-size:13px;color:var(--ink2);margin-top:4px;">Orçamento futuro + sugestões reais</div>
+    <div class="hdr-eyebrow">Estratégia 2 Meses</div>
+    <div class="hdr-title">Plano de <span>Ação</span></div>
+    <div class="hdr-sub">Objetivo: respirar financeiramente até Agosto 2026</div>
   </div>
 
-  <!-- TIMELINE ORÇAMENTO -->
+  <!-- OBJETIVO -->
   <div class="sec">
-    <div class="sec-tag">Projeção</div>
-    <div class="sec-title">Mês a Mês 📅</div>
-    <div class="timeline" style="padding-left:32px;margin-left:16px;padding-right:16px;">
+    <div class="sec-label">O Objetivo</div>
+    <div class="card" style="background:var(--ink);border:none;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:8px;">De hoje até Agosto</div>
+      <div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:#fff;line-height:1.2;margin-bottom:12px;">Passar de 81% para 66% do orçamento comprometido</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <div style="display:flex;gap:8px;align-items:center;font-size:12px;color:rgba(255,255,255,.7);">✅ Eliminar 6 dívidas pequenas de vez</div>
+        <div style="display:flex;gap:8px;align-items:center;font-size:12px;color:rgba(255,255,255,.7);">✅ Criar reserva de R$1.500</div>
+        <div style="display:flex;gap:8px;align-items:center;font-size:12px;color:rgba(255,255,255,.7);">✅ Liberar R$1.060/mês permanente</div>
+        <div style="display:flex;gap:8px;align-items:center;font-size:12px;color:rgba(255,255,255,.7);">✅ Retomar Mounjaro com segurança</div>
+      </div>
+    </div>
+  </div>
 
-      <div class="tl-item">
-        <div class="tl-dot" style="border-color:var(--amber);background:var(--bg);box-shadow:0 0 10px var(--amber);"></div>
-        <div class="tl-card" style="border-color:rgba(255,179,71,.2);">
-          <div class="tl-mes c-amber">Maio 2026</div>
-          <div class="tl-sobra c-amber">Sobra: R$ 1.378 + R$2.300 extras</div>
-          <div class="tl-note">📌 Dia 30: executar o Plano — quitar 6 dívidas + adiantar Teclado</div>
-          <div class="prog"><div class="prog-labels"><span>Comprometimento</span><span>81%</span></div><div class="prog-track"><div class="prog-fill" style="width:81%;background:linear-gradient(90deg,var(--red),var(--amber));"></div></div></div>
+  <!-- ESTRATÉGIAS -->
+  <div class="sec">
+    <div class="sec-label">Estratégias Possíveis</div>
+
+    <!-- ESTRATÉGIA ESCOLHIDA -->
+    <div class="card card-accent green" style="border:2px solid var(--green);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--green);">✅ Estratégia Escolhida</div>
+        <span class="badge badge-green">SELECIONADA</span>
+      </div>
+      <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:800;margin-bottom:8px;">Quitar pequenas + Pausar Mounjaro</div>
+      <div style="font-size:12px;color:var(--ink2);line-height:1.6;margin-bottom:12px;">Usar os R$2.300 do dia 30/05 para eliminar 6 dívidas menores e adiantar parcelas do Teclado. Pausar Mounjaro Jun/Jul libera R$3.558 para quitar Forte Calha + Galaxy S22 + criar reserva.</div>
+      <div style="background:var(--green-l);border-radius:10px;padding:12px;">
+        <div style="font-size:11px;font-weight:700;color:var(--green);margin-bottom:6px;">Resultado em números:</div>
+        <div style="font-size:12px;color:var(--green);">🏁 Agosto: sobra mensal de R$2.438 (hoje: R$1.378)</div>
+        <div style="font-size:12px;color:var(--green);">📉 Dívidas: de 13 para 5 frentes abertas</div>
+        <div style="font-size:12px;color:var(--green);">🛡️ Reserva de R$1.500 criada</div>
+      </div>
+    </div>
+
+    <!-- ESTRATÉGIA ALTERNATIVA 1 -->
+    <div class="card card-accent amber">
+      <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--amber);margin-bottom:6px;">Alternativa A — Mais conservadora</div>
+      <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:800;margin-bottom:6px;">Guardar tudo como reserva</div>
+      <div style="font-size:12px;color:var(--ink2);line-height:1.5;margin-bottom:8px;">Usar os R$2.300 integralmente como reserva de emergência. Não quitar nada agora. Foco em segurança antes de agressividade.</div>
+      <div style="font-size:11px;color:var(--amber);font-weight:600;">⚠️ Risco: dívidas continuam pesando no cartão · Psicologicamente mais difícil</div>
+    </div>
+
+    <!-- ESTRATÉGIA ALTERNATIVA 2 -->
+    <div class="card card-accent blue">
+      <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--blue);margin-bottom:6px;">Alternativa B — Mais agressiva</div>
+      <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:800;margin-bottom:6px;">Concentrar tudo na Forte Calha</div>
+      <div style="font-size:12px;color:var(--ink2);line-height:1.5;margin-bottom:8px;">Usar os R$2.300 integralmente para adiantar parcelas da Forte Calha (R$246/mês × 9 restantes). Elimina 9 meses de R$246.</div>
+      <div style="font-size:11px;color:var(--blue);font-weight:600;">⚠️ Risco: não elimina frentes pequenas que irritam · Sem reserva</div>
+    </div>
+  </div>
+
+  <!-- PLANO DE EXECUÇÃO -->
+  <div class="sec">
+    <div class="sec-label">Execução Semana a Semana</div>
+    <div class="card">
+      <div class="plano-step">
+        <div class="ps-num">1</div>
+        <div class="ps-body">
+          <div class="ps-title">Dia 30/05 — Executar o Plano</div>
+          <div class="ps-desc">Ir ao banco e quitar: Cadeiras (R$108), Calças (R$138), Sono Show (R$162), Óculos (R$180), Impressora (R$630), Bazar Cesp (R$831). Adiantar 3 últimas do Teclado (R$232).</div>
+          <div class="ps-impact" style="background:var(--green-l);color:var(--green);">💚 6 frentes eliminadas · R$580/mês liberado</div>
         </div>
       </div>
-
-      <div class="tl-item">
-        <div class="tl-dot" style="border-color:var(--cyan);background:var(--bg);box-shadow:0 0 10px var(--cyan);"></div>
-        <div class="tl-card" style="border-color:rgba(0,229,255,.2);">
-          <div class="tl-mes c-cyan">Junho 2026</div>
-          <div class="tl-sobra c-cyan">Disponível: ~R$ 3.041</div>
-          <div class="tl-note">⏸️ Mounjaro pausado — R$1.779 libertos<br>🎯 Meta: quitar Forte Calha (R$1.968)</div>
-          <div class="prog"><div class="prog-labels"><span>Comprometimento</span><span>55%</span></div><div class="prog-track"><div class="prog-fill" style="width:55%;background:linear-gradient(90deg,var(--cyan),var(--green));"></div></div></div>
+      <div class="plano-step">
+        <div class="ps-num warn">2</div>
+        <div class="ps-body">
+          <div class="ps-title">Antes de Junho — Pausar Mounjaro</div>
+          <div class="ps-desc">Conversar com médico. Confirmar pausa de Jun e Jul. Não comprar em Junho. Guardar o dinheiro que seria usado.</div>
+          <div class="ps-impact" style="background:var(--amber-l);color:var(--amber);">⚠️ Decisão médica necessária antes de executar</div>
         </div>
       </div>
-
-      <div class="tl-item">
-        <div class="tl-dot" style="border-color:var(--cyan);background:var(--bg);box-shadow:0 0 10px var(--cyan);"></div>
-        <div class="tl-card" style="border-color:rgba(0,229,255,.2);">
-          <div class="tl-mes c-cyan">Julho 2026</div>
-          <div class="tl-sobra c-cyan">Disponível: ~R$ 3.041</div>
-          <div class="tl-note">⏸️ 2º mês de respiro Mounjaro<br>🎯 Meta: quitar Galaxy S22 (R$783) + reserva R$1.500</div>
-          <div class="prog"><div class="prog-labels"><span>Comprometimento</span><span>50%</span></div><div class="prog-track"><div class="prog-fill" style="width:50%;background:linear-gradient(90deg,var(--cyan),var(--green));"></div></div></div>
+      <div class="plano-step">
+        <div class="ps-num">3</div>
+        <div class="ps-body">
+          <div class="ps-title">Junho — Quitar Forte Calha</div>
+          <div class="ps-desc">Com sobra de R$1.378 + R$1.779 (Mounjaro): R$3.157 disponíveis. Quitar Forte Calha (R$1.968). Guardar R$1.189.</div>
+          <div class="ps-impact" style="background:var(--green-l);color:var(--green);">💚 Forte Calha eliminada · +R$246/mês permanente</div>
         </div>
       </div>
+      <div class="plano-step">
+        <div class="ps-num">4</div>
+        <div class="ps-body">
+          <div class="ps-title">Julho — Quitar Galaxy S22 + Reserva</div>
+          <div class="ps-desc">Com sobra de R$3.157: quitar Galaxy S22 (R$783). Reservar R$1.500. Guardar o restante.</div>
+          <div class="ps-impact" style="background:var(--green-l);color:var(--green);">💚 Galaxy eliminado · Reserva criada · Meta atingida!</div>
+        </div>
+      </div>
+      <div class="plano-step">
+        <div class="ps-num done">✓</div>
+        <div class="ps-body">
+          <div class="ps-title">Agosto — Retomar com estabilidade</div>
+          <div class="ps-desc">Mounjaro retomado com segurança. Sobra mensal de R$2.438. Reserva de R$1.500. Orçamento respirando. Avaliar próximas dívidas a eliminar.</div>
+          <div class="ps-impact" style="background:var(--green-l);color:var(--green);">🏁 Objetivo cumprido — novo patamar financeiro</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <!-- TIMELINE -->
+  <div class="sec">
+    <div class="sec-label">Visão do Futuro</div>
+    <div class="timeline" style="margin:0 16px;">
       <div class="tl-item">
-        <div class="tl-dot" style="border-color:var(--green);background:var(--bg);box-shadow:0 0 15px var(--green);animation:glow 2s ease-in-out infinite;"></div>
-        <div class="tl-card" style="border-color:rgba(0,255,157,.3);background:rgba(0,255,157,.04);">
-          <div class="tl-mes c-green">Agosto 2026 🏁</div>
-          <div class="tl-sobra c-green">Sobra mensal: ~R$ 2.438 para sempre</div>
-          <div class="tl-note">✅ Mounjaro retomado com segurança<br>✅ 8 dívidas eliminadas<br>✅ Reserva de R$1.500 criada<br>✅ Orçamento respirando!</div>
-          <div class="prog"><div class="prog-labels"><span>Comprometimento</span><span>66%</span></div><div class="prog-track"><div class="prog-fill" style="width:66%;background:var(--green);"></div></div></div>
-          <div style="margin-top:12px;padding:10px;background:rgba(0,255,157,.08);border-radius:10px;border:1px solid rgba(0,255,157,.2);font-size:12px;color:var(--green);font-weight:700;">
-            💚 R$1.060/mês a mais no bolso permanentemente
+        <div class="tl-dot" style="border-color:var(--amber);"></div>
+        <div class="tl-card">
+          <div class="tl-mes" style="color:var(--amber)">Maio 2026</div>
+          <div class="tl-sobra" style="color:var(--amber)">Sobra normal: R$1.378 + R$2.300 extras</div>
+          <div class="tl-note">Dia 30: executar o plano. Faturas normais nos dias 02, 07 e 13.</div>
+          <div class="tl-bar">
+            <div class="tl-bar-row"><div class="tl-bar-lbl">Comprometido</div><div class="tl-bar-track"><div class="tl-bar-fill" style="width:81%;background:var(--red);"></div></div><div class="tl-bar-val" style="color:var(--red)">81%</div></div>
           </div>
         </div>
       </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="border-color:var(--blue);"></div>
+        <div class="tl-card">
+          <div class="tl-mes" style="color:var(--blue)">Junho 2026</div>
+          <div class="tl-sobra" style="color:var(--blue)">Disponível: ~R$3.157</div>
+          <div class="tl-note">Mounjaro pausado. 6 dívidas já quitadas no mês anterior. Foco em quitar Forte Calha.</div>
+          <div class="tl-bar">
+            <div class="tl-bar-row"><div class="tl-bar-lbl">Comprometido</div><div class="tl-bar-track"><div class="tl-bar-fill" style="width:55%;background:var(--blue);"></div></div><div class="tl-bar-val" style="color:var(--blue)">55%</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="border-color:var(--blue);"></div>
+        <div class="tl-card">
+          <div class="tl-mes" style="color:var(--blue)">Julho 2026</div>
+          <div class="tl-sobra" style="color:var(--blue)">Disponível: ~R$3.157</div>
+          <div class="tl-note">2º mês de pausa. Forte Calha já eliminada. Quitar Galaxy S22 e criar reserva de R$1.500.</div>
+          <div class="tl-bar">
+            <div class="tl-bar-row"><div class="tl-bar-lbl">Comprometido</div><div class="tl-bar-track"><div class="tl-bar-fill" style="width:50%;background:var(--blue);"></div></div><div class="tl-bar-val" style="color:var(--blue)">50%</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="border-color:var(--green);background:var(--green);"></div>
+        <div class="tl-card" style="border-color:rgba(26,122,74,.3);background:var(--green-l);">
+          <div class="tl-mes" style="color:var(--green)">Agosto 2026 🏁</div>
+          <div class="tl-sobra" style="color:var(--green)">Sobra permanente: ~R$2.438/mês</div>
+          <div class="tl-note">Mounjaro retomado. 8 dívidas eliminadas. Reserva de R$1.500. Score financeiro sobe para ~78.</div>
+          <div class="tl-bar">
+            <div class="tl-bar-row"><div class="tl-bar-lbl">Comprometido</div><div class="tl-bar-track"><div class="tl-bar-fill" style="width:66%;background:var(--green-m);"></div></div><div class="tl-bar-val" style="color:var(--green)">66%</div></div>
+          </div>
+          <div style="margin-top:10px;padding:10px;background:rgba(26,122,74,.1);border-radius:10px;font-size:12px;font-weight:700;color:var(--green);">+R$1.060/mês liberados permanentemente 💚</div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- SUGESTÕES -->
-  <div class="sec">
-    <div class="sec-tag">Sem sofrimento</div>
-    <div class="sec-title">Sugestões Suaves 🍃</div>
-
-    <div class="sug" style="background:rgba(0,255,157,.05);border-color:rgba(0,255,157,.2);">
-      <div class="sug-head">
-        <div class="sug-emoji">🍔</div>
-        <div><div class="sug-title">Reduzir alimentação fora</div><span class="sug-badge" style="background:rgba(0,255,157,.15);color:var(--green);">SUAVE · SEM IMPACTO</span></div>
-      </div>
-      <div class="sug-text">Você gasta ~R$350/mês em lanches, fast food e delivery. Reduzir de 4x para 2x por semana é natural e a família nem percebe. Uma prainha de vez em quando continua, só com mais consciência. 😊</div>
-      <div class="sug-save" style="background:rgba(0,255,157,.1);color:var(--green);">💚 Economia: R$100–150/mês</div>
+  <!-- PONTOS DE ATENÇÃO -->
+  <div class="sec" style="margin-bottom:8px;">
+    <div class="sec-label">Pontos de Atenção do Plano</div>
+    <div class="alert red">
+      <div class="alert-icon">⚠️</div>
+      <div><div class="alert-title red">Não criar novas dívidas parceladas</div><div class="alert-desc">Até Agosto evitar qualquer parcelamento novo não essencial. Cada nova parcela reduz a margem conquistada.</div></div>
     </div>
-
-    <div class="sug" style="background:rgba(0,255,157,.05);border-color:rgba(0,255,157,.2);">
-      <div class="sug-head">
-        <div class="sug-emoji">⛽</div>
-        <div><div class="sug-title">Usar mais a moto elétrica</div><span class="sug-badge" style="background:rgba(0,255,157,.15);color:var(--green);">SUAVE · JÁ PAGA</span></div>
-      </div>
-      <div class="sug-text">A moto elétrica já custa R$750/mês de parcela — isso você paga de qualquer jeito. Usar ela no dia a dia reduz gasolina diretamente. É o único gasto que gera economia ao ser usado mais!</div>
-      <div class="sug-save" style="background:rgba(0,255,157,.1);color:var(--green);">💚 Economia: R$60–100/mês</div>
+    <div class="alert amber">
+      <div class="alert-icon">🍔</div>
+      <div><div class="alert-title amber">Alimentação fora — maior risco do plano</div><div class="alert-desc">Se continuar no ritmo atual (R$520/mês em fast food), consome R$1.040 do dinheiro liberado em 2 meses. Reduzir para R$250 libera R$540 adicionais no período.</div></div>
+    </div>
+    <div class="alert green">
+      <div class="alert-icon">📅</div>
+      <div><div class="alert-title green">Atualização mensal do painel</div><div class="alert-desc">No final de cada mês: exportar PDF do MyFinance e atualizar este painel. Nova projeção, novos alertas, ajuste de rota se necessário.</div></div>
     </div>
   </div>
-
-  <div class="sec">
-    <div class="sec-tag">Um pouco de esforço</div>
-    <div class="sec-title">Sugestões Moderadas 🔥</div>
-
-    <div class="sug" style="background:rgba(255,179,71,.05);border-color:rgba(255,179,71,.2);">
-      <div class="sug-head">
-        <div class="sug-emoji">⏸️</div>
-        <div><div class="sug-title">Pausar Mounjaro 2 meses</div><span class="sug-badge" style="background:rgba(255,179,71,.15);color:var(--amber);">MODERADA · JÁ DECIDIDO ✓</span></div>
-      </div>
-      <div class="sug-text">Decisão correta e corajosa. Junho e Julho livres = R$3.558 extras que mudam o jogo. Converse com seu médico sobre dose reduzida no retorno em vez de dose cheia — pode ser mais sustentável financeiramente.</div>
-      <div class="sug-save" style="background:rgba(255,179,71,.1);color:var(--amber);">🔥 Impacto: +R$3.558 em 2 meses</div>
-    </div>
-
-    <div class="sug" style="background:rgba(255,179,71,.05);border-color:rgba(255,179,71,.2);">
-      <div class="sug-head">
-        <div class="sug-emoji">🏦</div>
-        <div><div class="sug-title">Criar reserva de emergência</div><span class="sug-badge" style="background:rgba(255,179,71,.15);color:var(--amber);">MODERADA · URGENTE</span></div>
-      </div>
-      <div class="sug-text">O empréstimo que voltou inesperadamente mostrou exatamente isso: qualquer susto desestabiliza. Meta simples: R$1.500 guardados até Agosto numa conta separada. Com a pausa do Mounjaro é totalmente possível.</div>
-      <div class="sug-save" style="background:rgba(255,179,71,.1);color:var(--amber);">🔥 Meta: R$1.500 até Agosto</div>
-    </div>
-  </div>
-
-  <div class="sec">
-    <div class="sec-tag">Muda o jogo</div>
-    <div class="sec-title">Decisões Importantes 🚀</div>
-
-    <div class="sug" style="background:rgba(255,68,102,.05);border-color:rgba(255,68,102,.2);">
-      <div class="sug-head">
-        <div class="sug-emoji">💊</div>
-        <div><div class="sug-title">Avaliar custo do Mounjaro</div><span class="sug-badge" style="background:rgba(255,68,102,.15);color:var(--red);">DECISIVA</span></div>
-      </div>
-      <div class="sug-text">R$1.779/mês = R$21.353/ano. Depois da pausa, converse com seu médico sobre dose menor, frequência reduzida ou plano de saúde que cubra parcialmente. Essa decisão sozinha vale mais que qualquer outra economia.</div>
-      <div class="sug-save" style="background:rgba(255,68,102,.08);color:var(--red);">🚀 Potencial: −R$500 a −R$900/mês</div>
-    </div>
-
-    <div class="sug" style="background:rgba(0,229,255,.05);border-color:rgba(0,229,255,.2);">
-      <div class="sug-head">
-        <div class="sug-emoji">📈</div>
-        <div><div class="sug-title">SAP + Faculdade = futuro</div><span class="sug-badge" style="background:rgba(0,229,255,.15);color:var(--cyan);">DECISIVA · LONGO PRAZO</span></div>
-      </div>
-      <div class="sug-text">Você está no caminho certo, Iury. SAP é uma das certificações mais valorizadas do mercado corporativo. Cada módulo dominado pode representar R$500–2.000 a mais por mês. A faculdade amplifica isso. Continue! 💪</div>
-      <div class="sug-save" style="background:rgba(0,229,255,.08);color:var(--cyan);">🚀 Potencial: +R$500–2.000/mês em 12–24 meses</div>
-    </div>
-  </div>
-  <div style="height:20px;"></div>
 </div>
 
 <!-- NAV -->
@@ -811,177 +742,309 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <button class="ni active" onclick="goTab('visao',this)"><div class="ni-icon">📊</div><div class="ni-label">Visão</div></button>
     <button class="ni" onclick="goTab('vida',this)"><div class="ni-icon">🏡</div><div class="ni-label">Pra Viver</div></button>
     <button class="ni" onclick="goTab('dividas',this)"><div class="ni-icon">💳</div><div class="ni-label">Dívidas</div></button>
-    <button class="ni" onclick="goTab('sugestoes',this)"><div class="ni-icon">💡</div><div class="ni-label">Plano</div></button>
+    <button class="ni" onclick="goTab('plano',this)"><div class="ni-icon">🎯</div><div class="ni-label">Plano</div></button>
   </div>
 </nav>
 
 <script>
-// ── DATA ──────────────────────────────────────────────
-const DEBTS=[
-  {id:'cadeiras',name:'Cadeiras de Praia',parcela:21.61,total:10,pagas:4,antecip:5,cartao:'🟡 Carrefour',cat:'Lazer',status:'quitada',plano:'Quitada no Plano 30/05 ✅'},
-  {id:'calcas',name:'Calças Iury',parcela:46.02,total:5,pagas:2,antecip:3,cartao:'🟠 Riachuelo',cat:'Roupas',status:'quitada',plano:'Quitada no Plano 30/05 ✅'},
-  {id:'sonoshow',name:'Sono Show — Guarda-roupa',parcela:162.47,total:12,pagas:10,antecip:1,cartao:'🟡 Carrefour',cat:'Casa',status:'quitada',plano:'Quitada no Plano 30/05 ✅'},
-  {id:'otica',name:'Otica Ben — Óculos',parcela:45.00,total:10,pagas:5,antecip:4,cartao:'🔴 Santander Principal',cat:'Saúde',status:'quitada',plano:'Quitada no Plano 30/05 ✅'},
-  {id:'impressora',name:'Impressora',parcela:57.27,total:15,pagas:3,antecip:11,cartao:'🟡 Carrefour',cat:'Casa',status:'quitada',plano:'Quitada no Plano 30/05 ✅'},
-  {id:'livros',name:'Bazar Cesp — Livros Escola',parcela:166.29,total:10,pagas:4,antecip:5,cartao:'🔴 Santander Principal',cat:'Educação',status:'quitada',plano:'Quitada no Plano 30/05 ✅'},
-  {id:'teclado',name:'Teclado (Piano)',parcela:77.32,total:21,pagas:7,antecip:3,cartao:'🔴 Santander Principal',cat:'Casa',status:'ativa',plano:'3 parcelas antecipadas no Plano 30/05'},
-  {id:'galaxy',name:'Galaxy S22 Ultra',parcela:156.62,total:21,pagas:15,antecip:0,cartao:'🔴 Santander Principal',cat:'Eletrônicos',status:'ativa',plano:'🎯 Meta Julho: quitar com pausa Mounjaro'},
-  {id:'fortecalha',name:'Forte Calha — Calha Frente',parcela:246.00,total:10,pagas:1,antecip:0,cartao:'🔴 Santander Principal',cat:'Casa',status:'ativa',plano:'🎯 Meta Junho: quitar com pausa Mounjaro'},
-  {id:'computador',name:'Shopee — Computador',parcela:228.33,total:12,pagas:8,antecip:0,cartao:'🔴 Santander Principal',cat:'Eletrônicos',status:'ativa',plano:'4 parcelas restantes — termina naturalmente'},
-  {id:'faculdade',name:'Faculdade Iury',parcela:140.35,total:31,pagas:4,antecip:0,cartao:'débito automático',cat:'Educação',status:'ativa',plano:'Investimento — manter sempre'},
-  {id:'escolaisac',name:'Escola Isac',parcela:600.37,total:12,pagas:5,antecip:0,cartao:'débito automático',cat:'Educação',status:'ativa',plano:'Avaliar negociação de desconto com a escola'},
-  {id:'moto',name:'Moto Elétrica',parcela:750.00,total:12,pagas:4,antecip:0,cartao:'🔴 Santander Principal',cat:'Transporte',status:'ativa',plano:'Em uso — gera economia em combustível diariamente'},
+// ── DATA ──────────────────────────────────────────────────────────
+// Datas de vencimento: Santander Principal/Assinaturas = dia 07, Carrefour = dia 02, Riachuelo = dia 13
+const VENC = { 'sp': 7, 'cf': 2, 'ri': 13, 'sa': 7, 'db': 1 };
+
+function calcDates(cartao, startMonth, startYear, totalParcelas, pagasJaFeitas) {
+  const dia = VENC[cartao] || 7;
+  const dates = [];
+  let m = startMonth, y = startYear;
+  for (let i = 1; i <= totalParcelas; i++) {
+    dates.push({ num: i, mes: m, ano: y, dia: dia });
+    m++;
+    if (m > 12) { m = 1; y++; }
+  }
+  return dates;
+}
+
+const DEBTS = [
+  // QUITADAS (plano 30/05)
+  { id:'cadeiras', name:'Cadeiras de Praia', parcela:21.61, total:10, pagas:4, antecip:5, cartao:'cf', cartaoLabel:'🟡 Carrefour', cat:'Lazer', status:'quitada', startMonth:5, startYear:2025, plano:'Quitada no Plano 30/05' },
+  { id:'calcas', name:'Calças Iury', parcela:46.02, total:5, pagas:2, antecip:3, cartao:'ri', cartaoLabel:'🟠 Riachuelo', cat:'Roupas', status:'quitada', startMonth:3, startYear:2026, plano:'Quitada no Plano 30/05' },
+  { id:'sonoshow', name:'Sono Show — Guarda-roupa', parcela:162.47, total:12, pagas:10, antecip:1, cartao:'cf', cartaoLabel:'🟡 Carrefour', cat:'Casa', status:'quitada', startMonth:9, startYear:2025, plano:'Quitada no Plano 30/05' },
+  { id:'otica', name:'Otica Ben — Óculos', parcela:45.00, total:10, pagas:5, antecip:4, cartao:'sp', cartaoLabel:'🔴 Santander Principal', cat:'Saúde', status:'quitada', startMonth:12, startYear:2025, plano:'Quitada no Plano 30/05' },
+  { id:'impressora', name:'Impressora', parcela:57.27, total:15, pagas:3, antecip:11, cartao:'cf', cartaoLabel:'🟡 Carrefour', cat:'Casa', status:'quitada', startMonth:2, startYear:2026, plano:'Quitada no Plano 30/05' },
+  { id:'livros', name:'Bazar Cesp — Livros Escola', parcela:166.29, total:10, pagas:4, antecip:5, cartao:'sp', cartaoLabel:'🔴 Santander Principal', cat:'Educação', status:'quitada', startMonth:1, startYear:2026, plano:'Quitada no Plano 30/05' },
+  // ATIVAS
+  { id:'teclado', name:'Teclado (Piano)', parcela:77.32, total:21, pagas:7, antecip:3, cartao:'sp', cartaoLabel:'🔴 Santander Principal', cat:'Casa', status:'ativa', startMonth:9, startYear:2025, plano:'3 últimas antecipadas no Plano 30/05' },
+  { id:'galaxy', name:'Galaxy S22 Ultra', parcela:156.62, total:21, pagas:15, antecip:0, cartao:'sp', cartaoLabel:'🔴 Santander Principal', cat:'Eletrônicos', status:'ativa', startMonth:7, startYear:2024, plano:'Meta Julho: quitar com pausa Mounjaro' },
+  { id:'fortecalha', name:'Forte Calha — Calha Frente', parcela:246.00, total:10, pagas:1, antecip:0, cartao:'sp', cartaoLabel:'🔴 Santander Principal', cat:'Casa', status:'ativa', startMonth:4, startYear:2026, plano:'Meta Junho: quitar com pausa Mounjaro' },
+  { id:'computador', name:'Shopee — Computador', parcela:228.33, total:12, pagas:8, antecip:0, cartao:'sp', cartaoLabel:'🔴 Santander Principal', cat:'Eletrônicos', status:'ativa', startMonth:9, startYear:2025, plano:'4 parcelas restantes — termina naturalmente' },
+  { id:'faculdade', name:'Faculdade Iury', parcela:140.35, total:31, pagas:4, antecip:0, cartao:'db', cartaoLabel:'débito automático', cat:'Educação', status:'ativa', startMonth:1, startYear:2026, plano:'Investimento — manter sempre' },
+  { id:'escolaisac', name:'Escola Isac', parcela:600.37, total:12, pagas:5, antecip:0, cartao:'db', cartaoLabel:'débito automático', cat:'Educação', status:'ativa', startMonth:12, startYear:2025, plano:'Avaliar desconto de pontualidade' },
+  { id:'moto', name:'Moto Elétrica', parcela:750.00, total:12, pagas:4, antecip:0, cartao:'sp', cartaoLabel:'🔴 Santander Principal', cat:'Transporte', status:'ativa', startMonth:1, startYear:2026, plano:'Em uso — reduz custo de combustível' },
 ];
 
-const LIFE_DETAILS={
-  moto:{title:'Moto Elétrica',icon:'🛵',val:'R$750/mês',desc:'Parcela mensal da moto. Já está no orçamento. Ao usar no dia a dia substitui o carro em deslocamentos curtos, reduzindo gasolina.',tip:'💡 Cada km na moto = economia real de gasolina'},
-  gasolina:{title:'Combustível',icon:'⛽',val:'~R$280/mês',desc:'Estimativa baseada em ~4 abastecimentos por mês. Com o uso da moto elétrica esse valor tende a cair naturalmente.',tip:'✂️ Potencial de redução: R$60–100/mês'},
-  internet:{title:'Internet Fibra',icon:'📶',val:'R$112,44/mês',desc:'Nio — conexão da família. Essencial. Não mexer nisso.',tip:'✅ Custo justo para fibra em RJ'},
-  telefone:{title:'Telefones',icon:'📱',val:'R$79,90/mês',desc:'Claro Controle para Iury e Amanda. Dois planos essenciais.',tip:'✅ Essencial para família'},
-  streaming:{title:'Streaming',icon:'🎬',val:'R$56,50 real/mês',desc:'Netflix + Disney+ + Amazon = R$172/mês bruto. Mas irmã e pai pagam R$116/mês. Custo real para vocês é apenas R$56,50!',tip:'💚 Divisão inteligente com a família'},
-  escola:{title:'Escola Isac',icon:'🏫',val:'R$600,37/mês',desc:'Educação do seu filho. Prioridade da família. Vale conversar com a escola sobre desconto por pontualidade — muitas escolas têm programas que não divulgam.',tip:'💡 Pergunte sobre desconto de pontualidade'},
-  faculdade:{title:'Faculdade Iury',icon:'🎓',val:'R$140,35/mês',desc:'Seu investimento no futuro. SAP + faculdade é a combinação que vai aumentar sua renda em R$500–2.000 nos próximos 2 anos. Continue firme!',tip:'🚀 Melhor investimento que você faz hoje'},
-  mounjaro:{title:'Mounjaro',icon:'💊',val:'R$1.779/mês',desc:'5 meses pagos à vista, agora parcelado. Decisão de pausar Junho e Julho é financeiramente correta. Libera R$3.558 para quitar dívidas e criar reserva.',tip:'⏸️ Pausado Jun/Jul — retorno em Agosto'},
-  academia:{title:'TotalPass',icon:'💪',val:'R$30/mês',desc:'Academia e esportes. Custo muito baixo para o benefício de saúde que traz. Manter.',tip:'✅ Custo-benefício excelente'},
-  mercado:{title:'Mercado',icon:'🛒',val:'~R$600/mês',desc:'Compras do Assaí, Guanabara e outros. Fazer uma compra grande mensal + reposições pequenas semanais pode reduzir o total em R$80–120.',tip:'✂️ Potencial com planejamento: −R$80/mês'},
-  fora:{title:'Alimentação Fora',icon:'🍔',val:'~R$350/mês',desc:'Lanches, delivery, restaurantes, sorveterias. Maior potencial de corte sem impacto real na qualidade de vida. Reduzir de 4x para 2x por semana.',tip:'✂️ Maior potencial de economia: R$100–150/mês'},
-};
+function load() {
+  try { const s = localStorage.getItem('pm_v4'); if (s) return JSON.parse(s); } catch(e) {}
+  return JSON.parse(JSON.stringify(DEBTS));
+}
+function save(d) { try { localStorage.setItem('pm_v4', JSON.stringify(d)); } catch(e) {} }
+let debts = load();
 
-function load(){try{const s=localStorage.getItem('pm_v3');if(s)return JSON.parse(s);}catch(e){}return JSON.parse(JSON.stringify(DEBTS));}
-function save(d){try{localStorage.setItem('pm_v3',JSON.stringify(d));}catch(e){}}
-let debts=load();
+const MESES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 
-// ── TABS ───────────────────────────────────────────────
-function goTab(name,el){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
-  document.getElementById('tab-'+name).classList.add('active');
+function parcelaDate(d, num) {
+  const dia = VENC[d.cartao] || 7;
+  let m = d.startMonth - 1 + num - 1;
+  let y = d.startYear + Math.floor(m / 12);
+  let mo = (m % 12) + 1;
+  return `${String(dia).padStart(2,'0')}/${MESES[mo-1]}`;
+}
+
+// ── TABS ──────────────────────────────────────────────────────────
+function goTab(name, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.ni').forEach(n => n.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
   el.classList.add('active');
-  if(name==='dividas')renderDebts();
-  if(name==='visao')updateOverview();
+  if (name === 'dividas') renderDebts();
+  if (name === 'visao') updateOverview();
 }
 
-// ── TOAST ─────────────────────────────────────────────
-function toast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2200);
+// ── VIDA TOGGLE ───────────────────────────────────────────────────
+function toggleVida(key) {
+  const el = document.getElementById('vida-' + key);
+  if (el) el.classList.toggle('open');
 }
 
-// ── MODAL ─────────────────────────────────────────────
-function openModal(html){document.getElementById('modal-body').innerHTML=html;document.getElementById('modal-ov').classList.add('open');}
-function closeModal(){document.getElementById('modal-ov').classList.remove('open');}
-document.getElementById('modal-ov').addEventListener('click',function(e){if(e.target===this)closeModal();});
-
-// ── LIFE DETAIL ───────────────────────────────────────
-function showLifeDetail(key){
-  const d=LIFE_DETAILS[key];if(!d)return;
-  openModal(`
-    <div style="font-size:36px;margin-bottom:12px;">${d.icon}</div>
-    <div class="modal-title">${d.title}</div>
-    <div style="font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:var(--cyan);margin:6px 0 16px;">${d.val}</div>
-    <div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">${d.desc}</div>
-    <div style="background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.15);border-radius:12px;padding:12px;font-size:12px;color:var(--cyan);font-weight:600;">${d.tip}</div>
-    <button class="mbtn mbtn-s" style="margin-top:20px;" onclick="closeModal()">Fechar</button>
-  `);
+// ── TOAST ─────────────────────────────────────────────────────────
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
 }
 
-// ── OVERVIEW ──────────────────────────────────────────
-function updateOverview(){
-  const ativas=debts.filter(d=>d.status!=='quitada');
-  const saldo=ativas.reduce((s,d)=>s+(d.total-d.pagas-d.antecip)*d.parcela,0);
-  const parcelasMes=ativas.reduce((s,d)=>s+d.parcela,0);
-  const comprometido=Math.round(((parcelasMes+2800)/7196)*100);
-  document.getElementById('ov-dividas').textContent=ativas.length;
-  document.getElementById('ov-saldo').textContent='R$'+Math.round(saldo/1000)+'k em aberto';
-  document.getElementById('ov-pct').textContent=comprometido+'%';
-  const sobra=7196-parcelasMes-2800;
-  document.getElementById('ov-sobra').textContent='R$'+Math.round(sobra);
+// ── MODAL ─────────────────────────────────────────────────────────
+function openModal(html) { document.getElementById('modal-body').innerHTML = html; document.getElementById('modal-ov').classList.add('open'); }
+function closeModal() { document.getElementById('modal-ov').classList.remove('open'); }
+document.getElementById('modal-ov').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+
+// ── OVERVIEW ──────────────────────────────────────────────────────
+function updateOverview() {
+  const ativas = debts.filter(d => d.status !== 'quitada');
+  const saldo = ativas.reduce((s, d) => s + (d.total - d.pagas - d.antecip) * d.parcela, 0);
+  const parcelasMes = ativas.reduce((s, d) => s + d.parcela, 0);
+  const el1 = document.getElementById('ov-dividas');
+  const el2 = document.getElementById('ov-saldo');
+  const el3 = document.getElementById('ov-parcelas-mes');
+  if (el1) el1.textContent = ativas.length;
+  if (el2) el2.textContent = 'R$' + Math.round(saldo / 1000 * 10) / 10 + 'k em aberto';
+  if (el3) el3.textContent = 'R$' + Math.round(parcelasMes).toLocaleString('pt-BR');
 }
 
-// ── RENDER DEBTS ──────────────────────────────────────
-function renderDebts(){
-  const list=document.getElementById('debt-list');
-  const ativas=debts.filter(d=>d.status!=='quitada');
-  const quitadas=debts.filter(d=>d.status==='quitada');
-  let html='';
-  html+=`<div style="margin-bottom:16px;"><div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);margin-bottom:4px;">Em aberto</div><div style="font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:var(--red);">${ativas.length} dívidas ativas</div></div>`;
-  ativas.forEach(d=>html+=buildCard(d));
-  html+=`<div style="margin:24px 0 16px;"><div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);margin-bottom:4px;">Eliminadas</div><div style="font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:var(--green);">${quitadas.length} quitadas ✅</div></div>`;
-  quitadas.forEach(d=>html+=buildCard(d));
-  list.innerHTML=html;
+// ── FORMAT ────────────────────────────────────────────────────────
+function fmt(v) { return 'R$ ' + v.toFixed(2).replace('.', ','); }
+
+// ── RENDER DEBTS ──────────────────────────────────────────────────
+function renderDebts() {
+  const list = document.getElementById('debt-list');
+  if (!list) return;
+  const ativas = debts.filter(d => d.status !== 'quitada');
+  const quitadas = debts.filter(d => d.status === 'quitada');
+  let html = '';
+
+  html += `<div style="margin-bottom:16px;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);margin-bottom:4px;">Em aberto</div>
+    <div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:var(--red);">${ativas.length} dívidas · ${fmt(ativas.reduce((s,d)=>s+(d.total-d.pagas-d.antecip)*d.parcela,0))}</div>
+  </div>`;
+  ativas.forEach(d => html += buildCard(d));
+
+  html += `<div style="margin:24px 0 14px;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);margin-bottom:4px;">Eliminadas</div>
+    <div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:var(--green);">${quitadas.length} quitadas ✅</div>
+  </div>`;
+  quitadas.forEach(d => html += buildCard(d));
+
+  list.innerHTML = html;
+  updateOverview();
 }
 
-function fmt(v){return 'R$'+v.toFixed(2).replace('.',',');}
+function buildCard(d) {
+  const rest = d.total - d.pagas - d.antecip;
+  const pct = Math.round(((d.pagas + d.antecip) / d.total) * 100);
+  const saldoTotal = rest * d.parcela;
+  const isQ = d.status === 'quitada';
+  const isR = d.antecip > 0 && !isQ;
 
-function buildCard(d){
-  const rest=d.total-d.pagas-d.antecip;
-  const pct=Math.round(((d.pagas+d.antecip)/d.total)*100);
-  const isQ=d.status==='quitada';
-  const isR=d.antecip>0&&!isQ;
-  const badge=isQ?`<span class="badge badge-green">QUITADA ✓</span>`:isR?`<span class="badge badge-cyan">REDUZIDA</span>`:`<span class="badge badge-amber">ATIVA</span>`;
-  let chips='';
-  for(let i=1;i<=d.total;i++){
-    let cls=i<=d.pagas?'paga':i<=d.pagas+d.antecip?'antecip':'';
-    const click=!isQ?`onclick="toggleChip('${d.id}',${i})"`:' ';
-    chips+=`<div class="chip ${cls}" ${click}>${i}</div>`;
+  const badge = isQ
+    ? `<span class="badge badge-green">QUITADA ✓</span>`
+    : isR
+      ? `<span class="badge badge-blue">REDUZIDA</span>`
+      : `<span class="badge badge-amber">ATIVA</span>`;
+
+  // Cálculo: quando termina naturalmente
+  let terminaNatural = '';
+  let terminaComAntecip = '';
+  if (!isQ) {
+    const lastPaga = d.pagas + d.antecip;
+    const lastNatural = d.total;
+    // Data da última parcela natural
+    terminaNatural = parcelaDate(d, lastNatural);
+    // Se houver antecipações, data da nova última
+    if (d.antecip > 0) {
+      terminaComAntecip = parcelaDate(d, d.pagas + d.antecip);
+    }
   }
-  return `<div class="dc ${isQ?'quitada':isR?'reduzida':'ativa'}" id="dc-${d.id}">
-    <div class="dc-top"><div class="dc-name">${d.name}</div>${badge}</div>
-    <div class="dc-cartao">💳 ${d.cartao} &nbsp;·&nbsp; 📁 ${d.cat}</div>
-    <div class="dc-stats">
-      <div><div class="dc-stat-lbl">Parcela</div><div class="dc-stat-val c-amber">${fmt(d.parcela)}</div></div>
-      <div><div class="dc-stat-lbl">Restantes</div><div class="dc-stat-val ${isQ?'c-green':''}">${isQ?'0':rest}x</div></div>
-      <div><div class="dc-stat-lbl">Saldo</div><div class="dc-stat-val ${isQ?'c-green':''}">${isQ?'R$0':'R$'+Math.round(rest*d.parcela)}</div></div>
+
+  // CHIPS
+  let chips = '';
+  for (let i = 1; i <= d.total; i++) {
+    const dateStr = parcelaDate(d, i);
+    let cls = '';
+    if (i <= d.pagas) cls = 'paga';
+    else if (i <= d.pagas + d.antecip) cls = 'antecip';
+    const click = !isQ ? `onclick="toggleChip('${d.id}',${i})"` : '';
+    chips += `<div class="chip ${cls}" ${click}>
+      <div class="chip-num">${i}</div>
+      <div class="chip-date">${dateStr}</div>
+      <div class="chip-val">${isQ || i <= d.pagas + d.antecip ? '✓' : 'R$' + Math.round(d.parcela)}</div>
+    </div>`;
+  }
+
+  // IMPACTO BOX (só para ativas)
+  const impactoHtml = !isQ ? `
+    <div class="impacto-box" id="impacto-${d.id}">
+      <div class="impacto-title">📊 Situação Atual</div>
+      <div class="impacto-row"><span class="impacto-lbl">Parcelas restantes</span><span class="impacto-val">${rest}x de ${fmt(d.parcela)}</span></div>
+      <div class="impacto-row"><span class="impacto-lbl">Total ainda a pagar</span><span class="impacto-val">${fmt(saldoTotal)}</span></div>
+      <div class="impacto-row"><span class="impacto-lbl">Termina naturalmente</span><span class="impacto-val">${terminaNatural}</span></div>
+      ${d.antecip > 0 ? `<div class="impacto-row" style="border-top:1px solid rgba(26,122,74,.2);padding-top:6px;margin-top:4px;"><span class="impacto-lbl">Com antecipações</span><span class="impacto-val" style="color:var(--blue);">Termina ${terminaComAntecip}</span></div>` : ''}
+    </div>` : '';
+
+  return `<div class="dc" id="dc-${d.id}">
+    <div class="dc-header">
+      <div class="dc-top"><div class="dc-name">${d.name}</div>${badge}</div>
+      <div class="dc-meta">💳 ${d.cartaoLabel} &nbsp;·&nbsp; 📁 ${d.cat}</div>
+      <div class="dc-stats">
+        <div class="dc-stat">
+          <div class="dc-stat-lbl">Parcela</div>
+          <div class="dc-stat-val" style="color:var(--amber)">${fmt(d.parcela)}</div>
+        </div>
+        <div class="dc-stat">
+          <div class="dc-stat-lbl">Restantes</div>
+          <div class="dc-stat-val" style="color:${isQ?'var(--green)':'var(--ink)'}">${isQ ? '0' : rest}x</div>
+        </div>
+        <div class="dc-stat">
+          <div class="dc-stat-lbl">Saldo</div>
+          <div class="dc-stat-val" style="color:${isQ?'var(--green)':'var(--red)'}">${isQ ? 'R$0' : 'R$'+Math.round(saldoTotal)}</div>
+        </div>
+      </div>
+      <div class="dc-progress">
+        <div class="dc-progress-labels"><span>${d.pagas + d.antecip}/${d.total} pagas</span><span>${pct}%</span></div>
+        <div class="dc-track"><div class="dc-fill" style="width:${pct}%;background:${isQ?'var(--green-m)':isR?'var(--blue)':'var(--amber)'};"></div></div>
+      </div>
+      ${impactoHtml}
+      ${d.plano ? `<div style="background:var(--surface2);border-radius:10px;padding:8px 12px;font-size:11px;color:var(--ink2);border:1px solid var(--border);">💡 ${d.plano}</div>` : ''}
     </div>
-    <div class="prog"><div class="prog-labels"><span>${d.pagas+d.antecip}/${d.total} pagas</span><span>${pct}%</span></div><div class="prog-track"><div class="prog-fill" style="width:${pct}%;background:${isQ?'var(--green)':isR?'var(--cyan)':'var(--amber)'};"></div></div></div>
-    <div style="font-size:9px;color:var(--ink3);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;margin-top:10px;">Parcelas</div>
-    <div class="chips">${chips}</div>
-    <div class="chip-leg"><div class="cl-i"><div class="cl-d" style="background:rgba(0,255,157,.15);border:1px solid rgba(0,255,157,.4);"></div>Paga</div><div class="cl-i"><div class="cl-d" style="background:rgba(0,229,255,.15);border:1px solid rgba(0,229,255,.4);"></div>Antecipada</div></div>
-    ${d.plano?`<div style="background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:8px 12px;font-size:11px;color:var(--ink2);margin-top:10px;">💡 ${d.plano}</div>`:''}
-    ${!isQ?`<button class="mbtn mbtn-p" style="margin-top:12px;padding:10px;font-size:12px;" onclick="openActions('${d.id}')">⚡ Ações rápidas</button>`:''}
+    <div class="parcelas-wrap">
+      <div class="parcelas-title">Parcelas — data · valor · status</div>
+      <div class="parcelas-grid">${chips}</div>
+      <div class="chip-legend">
+        <div class="cl"><div class="cl-dot" style="background:var(--green-l);border:1.5px solid rgba(26,122,74,.3);"></div>Paga</div>
+        <div class="cl"><div class="cl-dot" style="background:var(--blue-l);border:1.5px solid rgba(26,58,107,.3);"></div>Antecipada</div>
+        <div class="cl"><div class="cl-dot" style="background:var(--surface);border:1.5px solid var(--border);"></div>Futura</div>
+      </div>
+    </div>
+    ${!isQ ? `<div class="dc-actions">
+      <button class="btn btn-secondary" onclick="openActions('${d.id}')">⚡ Ações rápidas</button>
+      <button class="btn btn-green" onclick="simularAdiantamento('${d.id}')">📊 Simular</button>
+    </div>` : ''}
   </div>`;
 }
 
-// ── TOGGLE CHIP ───────────────────────────────────────
-function toggleChip(id,num){
-  const d=debts.find(x=>x.id===id);if(!d||num<=d.pagas)return;
-  if(num<=d.pagas+d.antecip){d.antecip=num-d.pagas-1;toast('Antecipação removida');}
-  else{d.antecip=num-d.pagas;toast(`Parcela ${num} antecipada ✓`);}
-  if(d.pagas+d.antecip>=d.total){d.status='quitada';toast('🎉 Dívida quitada!');}
-  else d.status=d.antecip>0?'reduzida':'ativa';
-  save(debts);renderDebts();updateOverview();
+// ── TOGGLE CHIP ───────────────────────────────────────────────────
+function toggleChip(id, num) {
+  const d = debts.find(x => x.id === id);
+  if (!d || num <= d.pagas) return;
+  // Sempre antecipa as ÚLTIMAS parcelas
+  const restantes = d.total - d.pagas;
+  const posicaoDoFim = d.total - (num - d.pagas) + 1;
+  if (num <= d.pagas + d.antecip) {
+    d.antecip = Math.max(0, d.antecip - 1);
+    toast('Antecipação removida');
+  } else {
+    // Antecipa a última disponível
+    d.antecip = Math.min(d.antecip + 1, restantes);
+    toast(`Última parcela antecipada ✓`);
+  }
+  if (d.pagas + d.antecip >= d.total) { d.status = 'quitada'; toast('🎉 Dívida quitada!'); }
+  else d.status = d.antecip > 0 ? 'reduzida' : 'ativa';
+  save(debts); renderDebts(); updateOverview();
 }
 
-// ── ACTIONS ───────────────────────────────────────────
-function openActions(id){
-  const d=debts.find(x=>x.id===id);if(!d)return;
-  const rest=d.total-d.pagas-d.antecip;
+// ── SIMULAR ADIANTAMENTO ──────────────────────────────────────────
+function simularAdiantamento(id) {
+  const d = debts.find(x => x.id === id);
+  if (!d) return;
+  const rest = d.total - d.pagas - d.antecip;
+  const termNatural = parcelaDate(d, d.total);
+
+  let rows = '';
+  for (let n = 1; n <= Math.min(rest, 6); n++) {
+    const novoFim = parcelaDate(d, d.total - n);
+    const custo = n * d.parcela;
+    rows += `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--surface2);border-radius:10px;margin-bottom:6px;border:1px solid var(--border);">
+      <div>
+        <div style="font-size:13px;font-weight:700;">Adiantar ${n}x</div>
+        <div style="font-size:11px;color:var(--ink3);">Termina em ${novoFim}</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:14px;font-weight:800;color:var(--blue)">${fmt(custo)}</div>
+        <div style="font-size:10px;color:var(--green);">−${n} mês(es)</div>
+      </div>
+    </div>`;
+  }
+
   openModal(`
     <div class="modal-title">${d.name}</div>
-    <div class="modal-sub">${rest}x restantes · R$${Math.round(rest*d.parcela)}</div>
+    <div class="modal-sub">Termina naturalmente em <strong>${termNatural}</strong> · ${rest}x restantes</div>
     <div style="height:1px;background:var(--border);margin:0 0 16px;"></div>
-    <button class="mbtn mbtn-s" onclick="adiantar('${id}',1)">Adiantar 1 parcela — ${fmt(d.parcela)}</button>
-    <button class="mbtn mbtn-s" onclick="adiantar('${id}',2)">Adiantar 2 parcelas — ${fmt(d.parcela*2)}</button>
-    <button class="mbtn mbtn-s" onclick="adiantar('${id}',3)">Adiantar 3 parcelas — ${fmt(d.parcela*3)}</button>
-    <button class="mbtn mbtn-p" onclick="quitarTudo('${id}')">✅ Quitar tudo — R$${Math.round(rest*d.parcela)}</button>
+    <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--ink3);margin-bottom:10px;">Se você adiantar as últimas parcelas...</div>
+    ${rows}
+    <button class="mbtn mbtn-s" style="margin-top:8px;" onclick="closeModal()">Fechar</button>
+  `);
+}
+
+// ── ACTIONS ───────────────────────────────────────────────────────
+function openActions(id) {
+  const d = debts.find(x => x.id === id);
+  if (!d) return;
+  const rest = d.total - d.pagas - d.antecip;
+  openModal(`
+    <div class="modal-title">${d.name}</div>
+    <div class="modal-sub">${rest}x restantes · Saldo: ${fmt(rest * d.parcela)}</div>
+    <div style="height:1px;background:var(--border);margin:0 0 16px;"></div>
+    <button class="mbtn mbtn-s" onclick="adiantar('${id}',1)">Adiantar última parcela — ${fmt(d.parcela)}</button>
+    <button class="mbtn mbtn-s" onclick="adiantar('${id}',2)">Adiantar 2 últimas — ${fmt(d.parcela*2)}</button>
+    <button class="mbtn mbtn-s" onclick="adiantar('${id}',3)">Adiantar 3 últimas — ${fmt(d.parcela*3)}</button>
+    <button class="mbtn mbtn-green" onclick="quitarTudo('${id}')">✅ Quitar tudo — ${fmt(rest*d.parcela)}</button>
     <button class="mbtn mbtn-d" onclick="closeModal()">Cancelar</button>
   `);
 }
-function adiantar(id,n){
-  const d=debts.find(x=>x.id===id);if(!d)return;
-  const rest=d.total-d.pagas-d.antecip;
-  d.antecip+=Math.min(n,rest);
-  if(d.pagas+d.antecip>=d.total){d.status='quitada';toast('🎉 Dívida quitada!');}
-  else{d.status='reduzida';toast(`${n} parcela(s) antecipada(s) ✓`);}
-  save(debts);closeModal();renderDebts();updateOverview();
-}
-function quitarTudo(id){
-  const d=debts.find(x=>x.id===id);if(!d)return;
-  d.antecip=d.total-d.pagas;d.status='quitada';
-  save(debts);closeModal();toast('🎉 '+d.name+' quitada!');renderDebts();updateOverview();
+
+function adiantar(id, n) {
+  const d = debts.find(x => x.id === id); if (!d) return;
+  const rest = d.total - d.pagas - d.antecip;
+  d.antecip += Math.min(n, rest);
+  if (d.pagas + d.antecip >= d.total) { d.status = 'quitada'; toast('🎉 Dívida quitada!'); }
+  else { d.status = 'reduzida'; toast(`${n} parcela(s) antecipada(s) ✓`); }
+  save(debts); closeModal(); renderDebts(); updateOverview();
 }
 
+function quitarTudo(id) {
+  const d = debts.find(x => x.id === id); if (!d) return;
+  d.antecip = d.total - d.pagas; d.status = 'quitada';
+  save(debts); closeModal(); toast('🎉 ' + d.name + ' quitada!'); renderDebts(); updateOverview();
+}
+
+// ── INIT ──────────────────────────────────────────────────────────
 updateOverview();
 </script>
 </body>
